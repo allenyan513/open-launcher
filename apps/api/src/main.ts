@@ -1,5 +1,6 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
+import { Logger } from '@nestjs/common';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, {
@@ -10,6 +11,7 @@ async function bootstrap() {
     origin: '*',
   });
   await app.listen(3001);
+  Logger.log(`App is running on: ${process.env.NEXT_PUBLIC_ENDPOINT_URL}`, 'Bootstrap');
 }
 
 bootstrap();

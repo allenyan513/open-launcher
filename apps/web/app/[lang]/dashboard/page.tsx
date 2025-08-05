@@ -10,7 +10,7 @@ export default function Page(props: { params: Promise<{ lang: string }> }) {
       if (!user) {
         return redirect(`/auth/signin`);
       } else {
-        return redirect(`/dashboard/overview`);
+        return redirect(`/dashboard/products`);
       }
     });
   }, []);

@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { Decimal } from '@prisma/client/runtime/library';
+// import { Decimal } from '@prisma/client/runtime/library';
 
 export const SubscriptionTier = {
   free: 'free',
@@ -18,8 +18,8 @@ export const userEntitySchema = z.object({
     .string()
     .refine((val) => !isNaN(Number(val)), {
       message: 'Balance must be a valid number',
-    })
-    .transform((val) => new Decimal(val)),
+    }),
+    // .transform((val) => new Decimal(val)),
   createdAt: z.date(),
   updatedAt: z.date(),
 });

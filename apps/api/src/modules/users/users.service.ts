@@ -25,7 +25,10 @@ export class UsersService {
         subscriptionTier: true,
       },
     });
-    return user;
+    return {
+      ...user,
+      balance: user.balance.toString(), // Convert balance to string if needed
+    }
   }
 
   async getUserByUid(uid: string) {

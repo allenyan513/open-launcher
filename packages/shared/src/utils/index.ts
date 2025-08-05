@@ -42,3 +42,21 @@ export function hash(str: string): string {
 export function generateIdToken(): string {
   return crypto.randomBytes(16).toString('hex');
 }
+
+
+export function getLetterFromDate(date = new Date()) {
+  const day = date.getDate(); // 获取当前日
+  const offset = (day - 1) % 25; // 从0开始的偏移，确保在0到24之间循环
+  return String.fromCharCode(97 + offset); // 97 是 'a' 的 ASCII 码
+}
+
+
+export function getFormatH1Date(date: Date) {
+  const options: Intl.DateTimeFormatOptions = {weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'};
+  return date.toLocaleDateString('en-US', options);
+}
+
+export function getFormatData2(dateTime: string) {
+  const options: Intl.DateTimeFormatOptions = {year: 'numeric', month: 'long', day: 'numeric'};
+  return new Date(dateTime).toLocaleDateString('en-US', options);
+}

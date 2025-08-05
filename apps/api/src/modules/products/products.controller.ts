@@ -1,0 +1,124 @@
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+  UseGuards,
+  Query,
+  Res,
+  Logger,
+} from '@nestjs/common';
+import {JwtAuthGuard} from '@src/modules/auth/guards/jwt-auth.guards';
+import {Jwt} from '@src/modules/auth/decorators/jwt.decorator';
+import {ProductsService} from '@src/modules/products/products.service';
+import {
+  findAllRequestSchema,
+  UpdateProductRequest,
+  JwtPayload,
+  SubmitProductRequest,
+  CreateProductRequest, SimpleCreateProductRequest
+} from '@repo/shared';
+import {Response} from 'express';
+
+
+@Controller('products')
+export class ProductsController {
+  private readonly logger = new Logger(ProductsController.name);
+
+  constructor(private readonly productsService: ProductsService) {
+  }
+
+  // @UseGuards(JwtAuthGuard)
+  // @Post()
+  // async create(@Jwt() jwt: JwtPayload, @Body() request: CreateProductRequest) {
+  //   return this.productsService.create(jwt.userId, request);
+  // }
+  @UseGuards(JwtAuthGuard)
+  @Post()
+  async create(@Jwt() jwt: JwtPayload, @Body() request: SimpleCreateProductRequest) {
+    return this.productsService.create(jwt.userId, request);
+  }
+
+
+  @UseGuards(JwtAuthGuard)
+  @Post('submit')
+  async submit(@Jwt() jwt: JwtPayload, @Body() request: SubmitProductRequest) {
+    return this.productsService.submit(jwt.userId, request);
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Post('crawl')
+  async crawlProductInfo(@Jwt() jwt: JwtPayload, @Body('url') url: string) {
+    return this.productsService.crawlProductInfo(url);
+  }
+
+  @Post('findAll')
+  async findAll(@Body() request: any) {
+    const validatedRequest = findAllRequestSchema.parse(request);
+    return this.productsService.findAll(null, validatedRequest);
+  }
+
+  @Get(':id')
+  async findOne(@Param('id') id: string) {
+    return this.productsService.findOne(id);
+  }
+
+  @Get(':id/badge.svg')
+  async getBadgeSvgById(
+    @Param('id') id: string,
+    @Query('theme') theme: 'light' | 'dark' = 'light',
+    @Res() res: Response,
+  ) {
+    const svgContent = await this.productsService.generateProductBadgeSvg(
+      id,
+      theme,
+    );
+    res.setHeader('Content-Type', 'image/svg+xml');
+    return res.send(svgContent);
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Post('verify')
+  async verify(@Body('url') url: string) {
+    const targets = [process.env.NEXT_PUBLIC_APP_URL];
+    return this.productsService.verifyEmbedCode(targets, url);
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Patch(':id')
+  async update(
+    @Jwt() jwt: JwtPayload,
+    @Param('id') id: string,
+    @Body() updateReviewDto: UpdateProductRequest,
+  ) {
+    return this.productsService.update(jwt.userId, id, updateReviewDto);
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Delete(':id')
+  async remove(@Jwt() jwt: JwtPayload, @Param('id') id: string) {
+    return this.productsService.remove(jwt.userId, id);
+  }
+
+  @Get('public/slug/:slug')
+  async publicSlug(@Param('slug') slug: string) {
+    return this.productsService.findOne(slug);
+  }
+
+
+  @UseGuards(JwtAuthGuard)
+  @Post('my/findAll')
+  async findMyAll(
+    @Jwt() jwt: JwtPayload,
+    @Body() request: any) {
+    const validatedRequest = findAllRequestSchema.parse(request);
+    return this.productsService.findAll(
+      jwt.userId,
+      validatedRequest);
+  }
+
+
+}

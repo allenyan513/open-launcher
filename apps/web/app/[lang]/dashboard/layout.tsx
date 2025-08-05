@@ -38,13 +38,19 @@ export default function RootLayout(props: {
         >
           <AppSidebar
             lang={lang}
-            title={'Reviewsup.io'}
+            title={'FF2050.AI'}
             items={[
+              // {
+              //   title: 'Overview',
+              //   url: `/${lang}/dashboard/overview`,
+              //   icon: IconDashboard,
+              //   active: path.includes('/overview'),
+              // },
               {
-                title: 'Overview',
-                url: `/${lang}/dashboard/overview`,
+                title: 'Products',
+                url: `/${lang}/dashboard/products`,
                 icon: IconDashboard,
-                active: path.includes('/overview'),
+                active: path.includes('/products'),
               },
             ]}
           />

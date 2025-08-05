@@ -1,21 +1,32 @@
 'use client';
 
-import { Menu, X } from 'lucide-react';
-import { useSelectedLayoutSegment } from 'next/navigation';
+import {Menu, X} from 'lucide-react';
+import {useRouter, useSelectedLayoutSegment} from 'next/navigation';
 import * as React from 'react';
 import Link from 'next/link';
-import { Button, buttonVariants } from '@repo/ui/button';
-import { Logo } from './logo';
-import { cn } from '@repo/ui/lib/utils';
-import { useState } from 'react';
-import { BsGithub, BsCaretDown } from 'react-icons/bs';
-import { LanguageSwitcher } from '@/components/language-switcher';
+import {Button, buttonVariants} from '@repo/ui/button';
+import {Logo} from './logo';
+import {cn} from '@repo/ui/lib/utils';
+import {useEffect, useState} from 'react';
+import {BsGithub, BsCaretDown, BsPlusCircle} from 'react-icons/bs';
+import {LanguageSwitcher} from '@/components/language-switcher';
 import {
   DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
+  DropdownMenuContent, DropdownMenuGroup,
+  DropdownMenuItem, DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@repo/ui/dropdown-menu';
+import {useUserStore} from '@/context/useUserStore';
+import {SidebarMenuButton} from "@repo/ui/sidebar";
+import {Avatar, AvatarFallback, AvatarImage} from "@repo/ui/avatar";
+import {
+  IconCreditCard,
+  IconDotsVertical,
+  IconLogout,
+  IconNotification,
+  IconTrash,
+  IconUserCircle
+} from "@tabler/icons-react";
 
 interface NavProps {
   lang?: string;
@@ -40,7 +51,8 @@ interface NavProps {
 
 function MobileItems(props: NavProps) {
   return (
-    <div className="fixed inset-0 top-16 z-50 grid h-[calc(100vh-4rem)] grid-flow-row auto-rows-max overflow-auto p-6 pb-32 animate-in slide-in-from-bottom-80 md:hidden">
+    <div
+      className="fixed inset-0 top-16 z-50 grid h-[calc(100vh-4rem)] grid-flow-row auto-rows-max overflow-auto p-6 pb-32 animate-in slide-in-from-bottom-80 md:hidden">
       <div className="relative z-20 grid gap-6 rounded-md bg-popover p-4 text-popover-foreground shadow-md">
         <nav className="grid grid-flow-row auto-rows-max text-sm">
           {props.items?.map((item, index) => (
@@ -83,7 +95,7 @@ function DesktopItems(props: NavProps) {
               <DropdownMenuTrigger asChild>
                 <div className={cn(baseClasses, 'cursor-pointer')}>
                   {item.title}
-                  <BsCaretDown className="text-sm ml-1 mt-1" />
+                  <BsCaretDown className="text-sm ml-1 mt-1"/>
                 </div>
               </DropdownMenuTrigger>
 
@@ -126,6 +138,81 @@ function DesktopItems(props: NavProps) {
   );
 }
 
+function SignInButton(props: { className?: string }) {
+  const syncSession = useUserStore((state) => state.syncSession);
+  const signOut = useUserStore((state) => state.signOut);
+  const user = useUserStore((state) => state.user);
+  const router = useRouter();
+
+  useEffect(() => {
+    syncSession()
+  }, [syncSession]);
+
+  if (!user) {
+    if (user === undefined) {
+      return null
+    }
+    return (
+      <Link
+        href={props.className || ''}
+        className={cn(
+          buttonVariants({
+            variant: 'ghost',
+            size: 'default'
+          }),
+          'rounded-md inline-flex hover:text-white transition-colors',
+          'text-white bg-black',
+        )}
+      >
+        <span className="">Sign in</span>
+      </Link>
+    )
+  } else {
+    return (
+      <DropdownMenu>
+        <DropdownMenuTrigger asChild>
+          <Avatar className="h-8 w-8 rounded-lg grayscale cursor-pointer">
+            <AvatarImage src={user?.avatarUrl} alt={user?.name}/>
+            <AvatarFallback className="rounded-full bg-gray-200 text-gray-800">
+              {user?.name?.charAt(0).toUpperCase() || 'CN'}
+            </AvatarFallback>
+          </Avatar>
+        </DropdownMenuTrigger>
+        <DropdownMenuContent
+          className="w-(--radix-dropdown-menu-trigger-width) min-w-56 rounded-lg"
+          side={'bottom'}
+          align="end"
+          sideOffset={4}
+        >
+          <DropdownMenuGroup>
+            <DropdownMenuItem
+              className={'cursor-pointer'}
+              onClick={() => {
+                router.push('/dashboard');
+              }}
+            >
+              Profile
+            </DropdownMenuItem>
+            <DropdownMenuItem
+              className={'cursor-pointer'}
+              onClick={() => {
+                router.push('/dashboard/products');
+              }}
+            >
+              My Products
+            </DropdownMenuItem>
+            <DropdownMenuItem
+              className={'cursor-pointer'}
+              onClick={signOut}>
+              Sign out
+            </DropdownMenuItem>
+          </DropdownMenuGroup>
+        </DropdownMenuContent>
+      </DropdownMenu>
+    )
+  }
+}
+
 export function Header(props: NavProps) {
   const [showMobileMenu, setShowMobileMenu] = useState<boolean>(false);
   return (
@@ -145,38 +232,41 @@ export function Header(props: NavProps) {
             onClick={() => setShowMobileMenu(!showMobileMenu)}
           >
             {showMobileMenu ? (
-              <X className="h-6 w-6" />
+              <X className="h-6 w-6"/>
             ) : (
-              <Menu className="h-6 w-6" />
+              <Menu className="h-6 w-6"/>
             )}
           </Button>
-          {showMobileMenu && props.items && <MobileItems items={props.items} />}
+          {showMobileMenu && props.items && <MobileItems items={props.items}/>}
         </div>
         <div>
-          {props.items?.length ? <DesktopItems items={props.items} /> : null}
+          {props.items?.length ? <DesktopItems items={props.items}/> : null}
         </div>
         <div className="flex gap-4 items-center">
-          <LanguageSwitcher
-            lang={props.lang || 'en'}
-            className="hidden md:inline-flex"
-          />
+          {/*<LanguageSwitcher*/}
+          {/*  lang={props.lang || 'en'}*/}
+          {/*  className="hidden md:inline-flex"*/}
+          {/*/>*/}
           <Link
             className="hidden md:inline-flex"
             href={props.githubLink || ''}
             target="_blank"
           >
-            <BsGithub className="h-6 w-6" />
+            <BsGithub className="h-6 w-6"/>
           </Link>
           <Link
             href={props.appLink || ''}
             className={cn(
-              buttonVariants({ size: 'default' }),
-              'rounded-md inline-flex hover:bg-red-500 hover:text-white transition-colors',
-              'text-white bg-red-400',
+              buttonVariants({
+                variant: 'outline',
+                size: 'default'
+              }),
             )}
           >
-            <span className="">Sign in</span>
+            <BsPlusCircle/>
+            <span className="">Submit</span>
           </Link>
+          <SignInButton/>
         </div>
       </div>
     </header>

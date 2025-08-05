@@ -51,7 +51,7 @@ export function AppSidebar(props: {
               className="data-[slot=sidebar-menu-button]:!p-1.5"
             >
               <Link href={`${process.env.NEXT_PUBLIC_ENDPOINT_URL}`}>
-                <Logo />
+                {/*<Logo />*/}
                 <h1 className="text-base font-semibold">{title}</h1>
               </Link>
             </SidebarMenuButton>

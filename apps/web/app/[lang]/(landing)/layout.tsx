@@ -12,20 +12,22 @@ export default async function RootLayout(props: {
     <>
       <Header
         lang={lang}
-        websiteLogo={'/img/logo-32.png'}
-        websiteName={'Reviewsup.io'}
+        websiteLogo={'/img/favicon.ico'}
+        websiteName={'FF2050.AI'}
         githubLink="https://github.com/allenyan513/reviewsup.io"
         appLink={`${process.env.NEXT_PUBLIC_ENDPOINT_URL}/dashboard`}
         items={[
-          { title: 'Customers', href: '/#customers' },
-          { title: 'Features', href: '/#features' },
-          { title: 'Pricing', href: '/#pricing' },
-          { title: 'FAQ', href: '/#faqs' },
+          { title: 'Launches', href: '/launches' },
+          { title: 'Products', href: '/products' },
+          { title: 'Category', href: '/category' },
         ]}
       />
-      <main className="flex-1 w-full">{props.children}</main>
+      <main className="flex flex-col items-center justify-between w-full max-w-7xl mx-auto">{props.children}</main>
       <Footer
-        builtBy="Reviewsup.io"
+        websiteLogo={'/img/favicon.ico'}
+        websiteName={'FF2050.AI'}
+        websiteDescription={'Open Source Product Launches Website'}
+        builtBy="FF2050.AI"
         builtByLink={process.env.NEXT_PUBLIC_ENDPOINT_URL as string}
         githubLink="https://github.com/allenyan513/reviewsup.io"
         twitterLink="https://x.com/alinlinlink"
