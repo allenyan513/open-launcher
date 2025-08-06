@@ -78,6 +78,6 @@ jobs:
             corepack prepare pnpm@latest --activate
 
             pnpm install --only production --frozen-lockfile
-            chmod +x apps/docs/start.sh
+#            chmod +x apps/docs/start.sh
             chmod +x apps/web/start.sh
             pnpm run pm2:start

@@ -154,7 +154,7 @@ function SignInButton(props: { className?: string }) {
     }
     return (
       <Link
-        href={props.className || ''}
+        href={'/auth/signin'}
         className={cn(
           buttonVariants({
             variant: 'ghost',

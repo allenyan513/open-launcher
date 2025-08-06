@@ -45,7 +45,7 @@ export function ProductLaunchesPage(props: {
   useEffect(() => {
     // 初次加载
     loadProducts(1);
-  }, [status, pageSize, JSON.stringify(tags)]); // JSON.stringify(tags) 防止 array 依赖不触发
+  }, [pageSize, JSON.stringify(tags)]); // JSON.stringify(tags) 防止 array 依赖不触发
 
   const handleLoadMore = () => {
     const nextPage = page + 1;

@@ -272,7 +272,7 @@ export class ProductsService {
     uid: string,
     request: FindAllRequest,
   ): Promise<PaginateResponse<ProductEntity>> {
-    this.logger.debug('request to findAll products', request);
+    // this.logger.debug('request to findAll products', request);
     const {status, group, search, tags, orderBy, productCategorySlug} = request;
     // if exists productCategorySlug, find productCategoryId
     let productCategoryId = request.productCategoryId;
