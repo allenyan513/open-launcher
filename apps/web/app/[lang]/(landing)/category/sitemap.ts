@@ -14,8 +14,8 @@ export default async function sitemap(props: {
   id: string
 }): Promise<MetadataRoute.Sitemap> {
   const result: any[] = []
-  const allSlugs = await api.productCategories.findAllSlug()
-  // const allSlugs: string[] = []
+  // const allSlugs = await api.productCategories.findAllSlug()
+  const allSlugs: string[] = []
   for (const slug of allSlugs) {
     result.push({
       url: `${process.env.NEXT_PUBLIC_DOMAIN_URL}/${props.id}/category/${slug}`,

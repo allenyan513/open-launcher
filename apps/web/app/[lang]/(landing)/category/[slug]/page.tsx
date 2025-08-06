@@ -24,17 +24,17 @@ export async function generateMetadata(props: {
   };
 }
 
-export async function generateStaticParams() {
-  const allSlugs = await api.productCategories.findAllSlug();
-  const staticLangs = ['en']
-  const result =  staticLangs.map((lang) => {
-    return allSlugs.map((slug) => ({
-      lang: lang,
-      slug: slug
-    }))
-  })
-  return result.flat()
-}
+// export async function generateStaticParams() {
+//   const allSlugs = await api.productCategories.findAllSlug();
+//   const staticLangs = ['en']
+//   const result =  staticLangs.map((lang) => {
+//     return allSlugs.map((slug) => ({
+//       lang: lang,
+//       slug: slug
+//     }))
+//   })
+//   return result.flat()
+// }
 
 async function fetchStaticData(lang: string, slug: string) {
   const topProductResponse = await api.products.findAll({
