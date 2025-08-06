@@ -14,7 +14,7 @@ export default async function RootLayout(props: {
         lang={lang}
         websiteLogo={'/img/favicon.ico'}
         websiteName={'FF2050.AI'}
-        githubLink="https://github.com/allenyan513/reviewsup.io"
+        githubLink="https://github.com/allenyan513/open-launcher"
         appLink={`${process.env.NEXT_PUBLIC_ENDPOINT_URL}/dashboard`}
         items={[
           { title: 'Launches', href: '/launches' },
@@ -26,13 +26,13 @@ export default async function RootLayout(props: {
       <Footer
         websiteLogo={'/img/favicon.ico'}
         websiteName={'FF2050.AI'}
-        websiteDescription={'Open Source Product Launches Website'}
+        websiteDescription={'Find your next AI tool and website.'}
         builtBy="FF2050.AI"
         builtByLink={process.env.NEXT_PUBLIC_ENDPOINT_URL as string}
-        githubLink="https://github.com/allenyan513/reviewsup.io"
+        githubLink="https://github.com/allenyan513/open-launcher"
         twitterLink="https://x.com/alinlinlink"
         linkedinLink="https://www.linkedin.com/in/ligangyan/"
-        email={'mailto:support@reviewsup.io'}
+        email={'mailto:wsyanligang@gmail.com'}
       />
     </>
   );

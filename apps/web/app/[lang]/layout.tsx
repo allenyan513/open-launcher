@@ -8,9 +8,9 @@ const openSans = Open_Sans({
 });
 
 export const metadata: Metadata = {
-  title: 'SaaS Starter Kit',
+  title: 'FF2050.AI - Find your next AI tool',
   description:
-    'A SaaS starter kit built with Next.js, NestJS, and Tailwind CSS.',
+    'Discover the best AI tools and websites. Explore categories, latest products, and top-rated AI solutions. Stay updated with the latest in AI technology.',
 };
 
 export default async function RootLayout(props: {
