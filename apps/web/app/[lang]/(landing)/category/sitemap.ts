@@ -18,7 +18,7 @@ export default async function sitemap(props: {
   // const allSlugs: string[] = []
   for (const slug of allSlugs) {
     result.push({
-      url: `${process.env.NEXT_PUBLIC_DOMAIN_URL}/${props.id}/category/${slug}`,
+      url: `${process.env.NEXT_PUBLIC_ENDPOINT_URL}/${props.id}/category/${slug}`,
       lastModified: new Date(),
       changeFrequency: 'weekly',
       priority: 0.8,

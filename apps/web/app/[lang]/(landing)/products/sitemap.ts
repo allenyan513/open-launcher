@@ -15,10 +15,9 @@ export default async function sitemap(props: {
 }): Promise<MetadataRoute.Sitemap> {
   const result: any[] = []
   const allSlugs = await api.products.findAllSlug()
-  // const allSlugs: string[] = []
   for (const slug of allSlugs) {
     result.push({
-      url: `${process.env.NEXT_PUBLIC_DOMAIN_URL}/${props.id}/products/${slug}`,
+      url: `${process.env.NEXT_PUBLIC_ENDPOINT_URL}/${props.id}/products/${slug}`,
       lastModified: new Date(),
       changeFrequency: 'weekly',
       priority: 0.8,
