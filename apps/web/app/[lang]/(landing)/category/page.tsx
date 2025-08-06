@@ -18,13 +18,13 @@ export async function generateMetadata(props: {
   };
 }
 
-export async function generateStaticParams() {
-  return i18n.locales.map((lang) => {
-    return {
-      lang: lang
-    }
-  })
-}
+// export async function generateStaticParams() {
+//   return i18n.locales.map((lang) => {
+//     return {
+//       lang: lang
+//     }
+//   })
+// }
 
 async function getAllCategories() {
   const result = []
