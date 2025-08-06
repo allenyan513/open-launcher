@@ -80,7 +80,7 @@ export default async function ProductPage(props: {
 
   return (
     <>
-      <div className='flex flex-col gap-8 pt-24 pb-12'>
+      <div className='flex flex-col gap-8 pt-24 pb-12 px-4'>
         <BreadCrumb data={breadCrumbData.data}/>
         <div className='flex flex-row gap-2 items-center'>
           {product.icon && (
@@ -138,8 +138,8 @@ export default async function ProductPage(props: {
           </div>
         </div>
       </div>
-      <div className='flex flex-col lg:flex-row gap-8 my-8 w-full'>
-        <div className='w-full'>
+      <div className='flex flex-col md:grid md:grid-cols-12 gap-8 w-full px-4'>
+        <div className='md:col-span-9'>
           {/*Information*/}
           <p className='h2'>{product.name} {t('ProductInformation')}</p>
           <div className='flex flex-col rounded border border-gray-300 px-5 py-4 gap-2 bg-white'>
@@ -195,7 +195,7 @@ export default async function ProductPage(props: {
             data={relativeProducts?.items}/>
         </div>
         <FeaturedProductsView
-          className='w-1/3'
+          className='md:col-span-3'
           lang={lang}/>
       </div>
     </>

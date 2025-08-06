@@ -8,9 +8,10 @@
     "postbuild": "pagefind --site .next/server/app --output-path public/_pagefind && next-sitemap",
     "start": "next start"
   },
-  "devDependencies": {
+  "dependencies": {
     "next": "^15.3.3",
     "nextra": "^4.2.17",
+    "next-sitemap": "^4.2.3",
     "nextra-theme-docs": "^4.2.17"
   }
 }

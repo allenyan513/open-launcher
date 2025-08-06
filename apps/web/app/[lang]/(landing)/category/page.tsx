@@ -58,13 +58,13 @@ export default async function ProductCategoriesPage(props: {
     }, 0)
 
   return (
-    <div className=''>
-      <div className='flex flex-col w-full justify-center items-center gap-4 text-center pt-24 pb-8'>
-        <h1 className='text-5xl font-bold'>{t("Find Best Products By Categories")}</h1>
+    <>
+      <div className='flex flex-col w-full justify-center items-center gap-4 text-center pt-24 pb-8 px-4'>
+        <h1 className='text-xl md:text-5xl font-bold'>{t("Find Best Products By Categories")}</h1>
         <p>{t("Over {{countCategory}} categories to find Best websites and tools", {countCategory: countCategory})}</p>
       </div>
-      <div className='flex flex-row w-full'>
-        <div className='sticky-category-list'>
+      <div className='grid grid-cols-12 w-full px-4'>
+        <div className='col-span-3 sticky top-24 h-[calc(100vh-6rem)] w-64 overflow-y-auto'>
           {PRODUCT_CATEGORY_GROUP.map((group) => (
             <ul key={group.name} className='flex flex-col gap-2'>
               <li className='mb-4'>
@@ -76,7 +76,7 @@ export default async function ProductCategoriesPage(props: {
             </ul>
           ))}
         </div>
-        <div className="flex flex-col w-full gap-8">
+        <div className="col-span-9 flex flex-col gap-8">
           {data.map((item) => (
             <div key={item.name}>
               <h3
@@ -98,6 +98,6 @@ export default async function ProductCategoriesPage(props: {
           ))}
         </div>
       </div>
-    </div>
+    </>
   );
 }

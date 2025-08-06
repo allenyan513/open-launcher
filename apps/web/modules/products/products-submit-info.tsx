@@ -62,7 +62,7 @@ export function ProductsSubmitInfo(props: {
             tagline: product.tagline || '',
             screenshots: product.screenshots || [],
             group: product.group,
-            productCategoryIds: product.productCategoryIds || [],
+            productCategoryIds: product?.productCategories?.map((c) => c.id) || [],
           });
         }
       })

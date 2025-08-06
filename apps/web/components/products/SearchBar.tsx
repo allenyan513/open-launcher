@@ -27,14 +27,14 @@ export default function SearchBar(props: {
         <input
           type="text"
           placeholder="Search for a product..."
-          className='border border-gray-300 rounded-l p-4 w-full lg:w-[48em]'
+          className='border border-gray-300 rounded-l p-2 md:p-4 w-full md:w-[48em]'
           value={inputValue}
           onChange={(e) => setInputValue(e.target.value)}
           onKeyDown={handleKeyDown}
         />
         <button
           onClick={handleSearch}
-          className='bg-blue-500 text-white rounded-r p-4'>Search</button>
+          className='bg-blue-500 text-white rounded-r p-2 md:p-4'>Search</button>
       </div>
     </div>
   )

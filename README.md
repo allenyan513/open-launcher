@@ -35,5 +35,5 @@ pnpm dev
 ### Deployment
 
 ```bash
-docker-compose -f docker-compose.prod.yml --env-file .env.production up -d
+docker-compose -f docker-compose.production.yml --env-file .env.production up -d
 ```

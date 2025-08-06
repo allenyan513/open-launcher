@@ -1,5 +1,5 @@
 import type {MetadataRoute} from 'next'
-import {getAllSlugs} from "@/services/product-service";
+// import {getAllSlugs} from "@/services/product-service";
 import {i18n} from "@/config/i18n-config";
 
 export async function generateSitemaps() {
@@ -14,7 +14,8 @@ export default async function sitemap(props: {
   id: string
 }): Promise<MetadataRoute.Sitemap> {
   const result: any[] = []
-  const allSlugs = await getAllSlugs()
+  // const allSlugs = await getAllSlugs()
+  const allSlugs:string[] = []
   for (const slug of allSlugs) {
     result.push({
       url: `${process.env.NEXT_PUBLIC_DOMAIN_URL}/${props.id}/products/${slug}`,

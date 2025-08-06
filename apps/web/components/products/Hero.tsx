@@ -16,13 +16,14 @@ export default async function Hero(props: {
   })
   return (
     <>
-      <div className='flex flex-col items-center justify-center gap-4 py-4 pt-24 pb-8'>
-        <h1 className='text-3xl lg:text-5xl font-semibold text-center'>{t("Discover The Best AI Websites & Tools")}</h1>
-        <p
-          className='text-center'>{t("{{key0}} AIs and {{key1}} categories in the best AI tools directory. AI tools list & GPTs store are updated daily by ChatGPT.", {
-          key0: productResponse.meta.total.toString() || '0',
-          key1: productCategories.meta.total.toString() || '0',
-        })}</p>
+      <div className='flex flex-col items-center justify-center gap-4 px-4 pt-24 pb-8'>
+        <h1 className='text-xl lg:text-5xl font-semibold text-center'>{t("Discover The Best AI Websites & Tools")}</h1>
+        <p className='text-center text-sm md:text-md'>
+          {t("{{key0}} AIs and {{key1}} categories in the best AI tools directory. AI tools list & GPTs store are updated daily by ChatGPT.", {
+            key0: productResponse.meta.total.toString() || '0',
+            key1: productCategories.meta.total.toString() || '0',
+          })}
+        </p>
         <SearchBar
           className='mt-4'
           lang={props.lang}/>

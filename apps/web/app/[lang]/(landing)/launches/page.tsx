@@ -16,7 +16,7 @@ export default async function Page(props: {
         />
       </div>
       <FeaturedProductsView
-        className={'md:col-span-4'}
+        className={'px-4 md:col-span-4'}
         lang={lang}/>
     </div>
   );

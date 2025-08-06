@@ -82,7 +82,7 @@ export default async function ProductsPage(props: {
   return (
     <>
       <Hero lang={lang}/>
-      <div className='py-8 flex flex-col lg:flex-row gap-8'>
+      <div className='flex flex-col lg:flex-row gap-8 py-8 px-4 '>
         <div className='flex-1 flex flex-col gap-8'>
           <ProductTagsView
             activeTag={"Today"}

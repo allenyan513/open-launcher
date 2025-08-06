@@ -97,19 +97,19 @@ export default async function ProductCategoryListPage(props: {
   ]
 
   return (
-    <div className=''>
-      <div className='custom-padding bg-linear flex flex-col gap-8 pt-24 pb-12'>
+    <>
+      <div className='flex flex-col gap-8 pt-24 pb-12 px-4'>
         <BreadCrumb data={breadCrumbData}/>
         <div className='flex flex-col items-center justify-center gap-4'>
-          <h1 className='text-5xl font-semibold text-center'>
+          <h1 className='text-xl md:text-5xl font-semibold text-center'>
             {staticData.title}
           </h1>
           <p>{staticData.top10ListNames}</p>
         </div>
       </div>
 
-      <div className='flex flex-col lg:flex-row gap-8 custom-padding'>
-        <div className='flex flex-col flex-1'>
+      <div className='flex flex-col md:grid md:grid-cols-12 gap-8 px-4'>
+        <div className='flex flex-col md:col-span-9'>
           <ProductListView
             className={'md:grid-cols-3'}
             lang={lang}
@@ -122,9 +122,9 @@ export default async function ProductCategoryListPage(props: {
             latestProducts={staticData.latestProducts}/>
         </div>
         <FeaturedProductsView
-          className={'w-1/5'}
+          className={'w-full md:col-span-3'}
           lang={lang}/>
       </div>
-    </div>
+    </>
   );
 }

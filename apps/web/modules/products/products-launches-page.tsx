@@ -55,7 +55,7 @@ export function ProductLaunchesPage(props: {
 
   return (
     <>
-      <h2 className="h2 px-4">
+      <h2 className="text-xl md:text-3xl font-bold px-4">
         {title ? title : 'Top Products'}
       </h2>
       <div className="flex flex-col items-center">
