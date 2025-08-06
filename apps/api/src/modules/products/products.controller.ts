@@ -31,11 +31,6 @@ export class ProductsController {
   constructor(private readonly productsService: ProductsService) {
   }
 
-  // @UseGuards(JwtAuthGuard)
-  // @Post()
-  // async create(@Jwt() jwt: JwtPayload, @Body() request: CreateProductRequest) {
-  //   return this.productsService.create(jwt.userId, request);
-  // }
   @UseGuards(JwtAuthGuard)
   @Post()
   async create(@Jwt() jwt: JwtPayload, @Body() request: SimpleCreateProductRequest) {
@@ -59,6 +54,10 @@ export class ProductsController {
   async findAll(@Body() request: any) {
     const validatedRequest = findAllRequestSchema.parse(request);
     return this.productsService.findAll(null, validatedRequest);
+  }
+  @Get('findAllSlug')
+  async findAllSlug() {
+    return this.productsService.findAllSlug();
   }
 
   @Get(':id')

@@ -14,7 +14,6 @@ export class ProductCategoriesService {
   async findAll(
     request: FindAllProductCategoriesRequest,
   ): Promise<PaginateResponse<ProductCategoryEntity>> {
-    this.logger.debug('request to findAll products', request);
     const {group} = request
     const whereCondition: any = {
       ...(group && {
@@ -46,6 +45,19 @@ export class ProductCategoriesService {
         pageCount: Math.ceil(total / (request.pageSize || 10)),
       },
     };
+  }
+  async findAllSlug(): Promise<string[]> {
+    const products = await this.prismaService.productCategory.findMany({
+      where: {
+        slug: {
+          not: null,
+        },
+      },
+      select: {
+        slug: true,
+      },
+    });
+    return products.map(product => product.slug);
   }
 
   /**

@@ -358,6 +358,21 @@ export class ProductsService {
       },
     };
   }
+
+  async findAllSlug(): Promise<string[]> {
+    const products = await this.prismaService.product.findMany({
+      where: {
+        slug: {
+          not: null,
+        },
+      },
+      select: {
+        slug: true,
+      },
+    });
+    return products.map(product => product.slug);
+  }
+
     /**
    *
    * @param id or slug

@@ -7,6 +7,6 @@ export const productCategories = {
     authFetch(`/api/product-categories/findAll`, 'POST', request),
   findOne: (id: string): Promise<ProductCategoryEntity> =>
     authFetch(`/api/product-categories/${id}`, 'GET'),
-
-  // findProductsByCategory: (slug: string): Promise<{ }
+  findAllSlug: (): Promise<string[]> =>
+    authFetch(`/api/product-categories/findAllSlug`, 'GET'),
 };

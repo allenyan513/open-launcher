@@ -1,6 +1,6 @@
 import type {MetadataRoute} from 'next'
-// import {getAllSlugs} from "@/services/product-service";
 import {i18n} from "@/config/i18n-config";
+import {api } from "@repo/shared/api-client"
 
 export async function generateSitemaps() {
   return i18n.locales.map((lang) => {
@@ -14,8 +14,7 @@ export default async function sitemap(props: {
   id: string
 }): Promise<MetadataRoute.Sitemap> {
   const result: any[] = []
-  // const allSlugs = await getAllSlugs()
-  const allSlugs:string[] = []
+  const allSlugs = await api.products.findAllSlug()
   for (const slug of allSlugs) {
     result.push({
       url: `${process.env.NEXT_PUBLIC_DOMAIN_URL}/${props.id}/products/${slug}`,

@@ -14,28 +14,17 @@ import {useTranslate} from "@/i18n/dictionaries";
 
 async function fetchStaticData(lang: string) {
   const t = await useTranslate(lang);
-  //使用当前的日，对应一个a-z字母中的某个字母,比如 10月1日是a，10月2日是b
-  const letter = getLetterFromDate()
   // 从最新里取12个产品
   const latestProducts = await api.products.findAll({
     page: 1,
-    pageSize: 12,
-    status: ['approved'],
-  })
-  // 从字母取12个产品, 混合random
-  const topProducts = await api.products.findAll({
-    page: 1,
-    pageSize: 12,
+    pageSize: 24,
     status: ['approved'],
   })
   const todayProducts = [
     ...latestProducts.items,
-    ...topProducts.items
   ]
-
   //random
   todayProducts.sort(() => Math.random() - 0.5);
-
   const productCategories = await api.productCategories.findAll({
     page: 1,
     pageSize: 12,
@@ -43,7 +32,7 @@ async function fetchStaticData(lang: string) {
   return {
     title: t("Discover The Best AI Websites & Tools"),
     description: t("{{key0}} AIs and {{key1}} categories in the best AI tools directory. AI tools list & GPTs store are updated daily by ChatGPT.", {
-      key0: topProducts.meta.total.toString() || '0',
+      key0: latestProducts.meta.total.toString() || '0',
       key1: productCategories.meta.total.toString() || '0',
     }),
     todayProducts: todayProducts,
@@ -63,13 +52,13 @@ export async function generateMetadata(props: {
   }
 }
 
-// export async function generateStaticParams(props: any) {
-//   return i18n.locales.map((lang) => {
-//     return {
-//       lang: lang
-//     }
-//   })
-// }
+export async function generateStaticParams(props: any) {
+  return i18n.locales.map((lang) => {
+    return {
+      lang: lang
+    }
+  })
+}
 
 
 export default async function ProductsPage(props: {

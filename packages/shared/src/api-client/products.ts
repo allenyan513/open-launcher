@@ -20,6 +20,8 @@ export const products = {
     authFetch(`/api/products/my/findAll`, 'POST', request),
   findOne: (id: string): Promise<ProductEntity> =>
     authFetch(`/api/products/${id}`, 'GET'),
+  findAllSlug: (): Promise<string[]> =>
+    authFetch(`/api/products/findAllSlug`, 'GET'),
   create: (request: SimpleCreateProductRequest): Promise<ProductEntity> =>
     authFetch(`/api/products`, 'POST', request),
   submit: (request: SubmitProductRequest,): Promise<RRResponse<ProductEntity | CreateOneTimePaymentResponse>> =>
