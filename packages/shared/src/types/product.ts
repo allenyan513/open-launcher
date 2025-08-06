@@ -35,7 +35,6 @@ export const createProductSchema = z.object({
     .max(260, 'Description must be less than 260 characters'),
   icon: z.string().url('Invalid URL').min(1, 'Icon URL is required'),
   screenshots: z.array(z.string().url('Invalid URL')).optional(),
-  group: z.string().optional(),
   productCategoryIds: z.array(z.string()).optional(),
   submitOption: z
     .enum(['free-submit', 'paid-submit', 'crawl-product-info', 'update'])
@@ -82,7 +81,7 @@ export const productSchema = z.object({
     .max(160, 'Description must be less than 160 characters')
     .optional(),
   featured: z.boolean().default(false),
-  group: z.string().optional(),
+  voteCount: z.coerce.number().int().default(0),
   productCategories: z.lazy(() => z.array(productCategorySchema)).optional(),
   longDescription: z.string().optional(),
   features: z.string().optional(),
@@ -106,7 +105,6 @@ export const findAllRequestSchema = z.object({
   page: z.coerce.number().int().min(1).default(1).optional(),
   pageSize: z.coerce.number().int().min(1).max(100).default(10).optional(),
   status: z.array(z.nativeEnum(ProductStatus)).optional(),
-  group: z.string().optional(),
   search: z.string().optional(),
   tags: z.array(z.string()).optional().default([]),
   orderBy: z.object({

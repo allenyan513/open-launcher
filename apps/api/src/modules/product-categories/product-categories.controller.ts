@@ -22,14 +22,18 @@ export class ProductCategoriesController {
   constructor(private readonly productCategoriesService: ProductCategoriesService) {
   }
 
-  @Post('findAll')
-  async findAll(@Body() request: any) {
+  @Post('findList')
+  async findList(@Body() request: any) {
     const validatedRequest = findAllProductCategoriesRequestSchema.parse(request);
-    return this.productCategoriesService.findAll(validatedRequest);
+    return this.productCategoriesService.findList(validatedRequest);
   }
   @Get('findAllSlug')
   async findAllSlug() {
     return this.productCategoriesService.findAllSlug();
+  }
+  @Get('findAll')
+  async findAll() {
+    return this.productCategoriesService.findAll();
   }
 
   @Get(':id')

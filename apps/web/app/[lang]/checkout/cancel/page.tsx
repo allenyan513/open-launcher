@@ -1,5 +1,6 @@
 'use client';
 
+import { websiteConfig } from '@/config/website';
 import Link from 'next/link';
 
 export default function CheckoutCancelPage() {
@@ -15,7 +16,7 @@ export default function CheckoutCancelPage() {
         <p className="mt-2 text-lg text-gray-600">
           You can close this window or return to the{' '}
           <Link href="/apps/web/public" className="text-blue-500 hover:underline">
-            reviewsup.io
+            {websiteConfig.websiteName}
           </Link>
         </p>
       </div>

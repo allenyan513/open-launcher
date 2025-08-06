@@ -27,10 +27,10 @@ export const EmailSigninEmail = (props: { url: string }) => {
           <Section style={box}>
             <Img
               style={logo}
-              src={`https://reviewsup.io/img/logo-128.png`}
+              src={`https://ai.ff2050.com/img/favicon-32.png`}
               width="49"
               height="49"
-              alt="reviewsup.io logo"
+              alt="FF2050.AI logo"
             />
             <Text style={paragraph}>Dear User,</Text>
             <Text style={paragraph}>
@@ -40,10 +40,6 @@ export const EmailSigninEmail = (props: { url: string }) => {
               Continue Sign-in
             </Button>
             <Text style={footer}>
-              {/*Powered by{' '}*/}
-              {/*<Link href="https://reviewsup.io" style={anchor}>*/}
-              {/*  Reviewsup.io*/}
-              {/*</Link>*/}
             </Text>
           </Section>
         </Container>

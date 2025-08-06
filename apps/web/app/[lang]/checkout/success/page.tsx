@@ -1,6 +1,7 @@
 'use client';
 
 import Link from 'next/link';
+import {websiteConfig} from "@/config/website";
 
 export default function CheckoutSuccessPage() {
   return (
@@ -15,7 +16,7 @@ export default function CheckoutSuccessPage() {
         <p className="mt-2 text-lg text-gray-600">
           You can close this window or return to the{' '}
           <Link href="/apps/web/public" className="text-blue-500 hover:underline">
-            reviewsup.io
+            {websiteConfig.websiteName}
           </Link>
         </p>
       </div>

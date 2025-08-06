@@ -42,7 +42,6 @@ export class ProductsService {
    * @param uid
    * @param dto
    */
-  // async create(uid: string, dto: CreateProductRequest) {
   async create(uid: string, dto: SimpleCreateProductRequest) {
     const slug = slugify(dto.name, {
       lower: true,
@@ -75,7 +74,6 @@ export class ProductsService {
         description: crawlProductResponse.description || '',
         icon: crawlProductResponse.faviconUrl || '',
         screenshots: [crawlProductResponse.screenshotUrl] || [],
-        group: '',
         status: 'pending',
         createdAt: new Date(),
         updatedAt: new Date(),
@@ -272,7 +270,7 @@ export class ProductsService {
     uid: string,
     request: FindAllRequest,
   ): Promise<PaginateResponse<ProductEntity>> {
-    const {status, group, search, tags, orderBy, productCategorySlug} = request;
+    const {status, search, tags, orderBy, productCategorySlug} = request;
     let productCategoryId = request.productCategoryId;
     if (productCategorySlug) {
       const productCategory = await this.prismaService.productCategory.findFirst({
@@ -306,9 +304,6 @@ export class ProductsService {
         status: {
           in: status as ProductStatus[], // Filter by status if provided
         },
-      }),
-      ...(group && {
-        group: group
       }),
       ...(search && {
         OR: [
@@ -420,8 +415,13 @@ export class ProductsService {
       data: {
         icon: dto.icon,
         screenshots: dto.screenshots || [],
-        description: dto.description,
         tagline: dto.tagline,
+        description: dto.description,
+        productCategories: {
+          set: dto.productCategoryIds?.map((categoryId) => ({
+            id: categoryId,
+          }))
+        },
         updatedAt: new Date(), // Update the timestamp
       },
     });
@@ -441,8 +441,7 @@ export class ProductsService {
       throw new Error('Product not found');
     }
     const el = React.createElement(BadgeSvg, {
-      averageRating: 5,
-      totalReviews: 5,
+      voteCount: product.voteCount || 0,
       theme: theme,
     });
     const svgString = ReactDOMServer.renderToStaticMarkup(el);

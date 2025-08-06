@@ -1,6 +1,6 @@
 'use client';
 import React, {use, useEffect, useState} from 'react';
-import {CreateProductRequest, createProductSchema} from '@repo/shared/types';
+import {CreateProductRequest, createProductSchema, ProductCategoryEntity} from '@repo/shared/types';
 import {zodResolver} from '@hookform/resolvers/zod';
 import {api} from '@repo/shared/api-client';
 import toast from 'react-hot-toast';
@@ -28,8 +28,6 @@ export function ProductsSubmitInfo(props: {
   const {lang, productId} = props;
   const router = useRouter();
   const [loading, setLoading] = useState<boolean>(false);
-  // const [isCrawling, setIsCrawling] = useState<boolean>(false);
-
   const form = useForm<CreateProductRequest>({
     resolver: zodResolver(createProductSchema),
     defaultValues: {
@@ -40,7 +38,6 @@ export function ProductsSubmitInfo(props: {
       description: '',
       icon: '',
       screenshots: [],
-      group: '',
       productCategoryIds: [],
     },
   });
@@ -61,7 +58,6 @@ export function ProductsSubmitInfo(props: {
             icon: product.icon || '',
             tagline: product.tagline || '',
             screenshots: product.screenshots || [],
-            group: product.group,
             productCategoryIds: product?.productCategories?.map((c) => c.id) || [],
           });
         }
@@ -70,6 +66,7 @@ export function ProductsSubmitInfo(props: {
         console.error('Error fetching product details:', error);
       });
   }, [productId]);
+
 
   const handleUpdate = async () => {
     try {
@@ -91,58 +88,15 @@ export function ProductsSubmitInfo(props: {
     }
   };
 
-  // const handleCrawlProductInfo = async () => {
-  //   try {
-  //     const url = form.getValues('url');
-  //     setIsCrawling(true);
-  //     const response = await api.products.crawlOne(url || '');
-  //     const {title, description, faviconUrl, screenshotUrl} = response;
-  //     form.setValue('name', title);
-  //     form.setValue('description', description);
-  //     form.setValue('icon', faviconUrl);
-  //     form.setValue('screenshots', [screenshotUrl || '']);
-  //     setIsCrawling(false);
-  //   } catch (error) {
-  //     setIsCrawling(false);
-  //     toast.error('Failed to fetch product info. Please try again.');
-  //   }
-  // };
-
-  // const onSubmit = async (data: CreateProductRequest) => {
-  //   try {
-  //     setLoading(true);
-  //     const newProduct = await api.products.create(data);
-  //     setLoading(false);
-  //     router.push(`/dashboard/products/new/${newProduct.id}`);
-  //   } catch (error) {
-  //     setLoading(false);
-  //     toast.error('Failed to submit product. Please try again.');
-  //   }
-  // };
-  //
-  // const onError = (error: any) => {
-  //   console.error(error);
-  // };
-
   return (
     <Form {...form}>
       <form
         onSubmit={(e) => {
           e.preventDefault();
           handleUpdate();
-          // if (form.getValues('submitOption') === 'crawl-product-info') {
-          //   handleCrawlProductInfo();
-          // } else if (form.getValues('submitOption') === 'update') {
-          //   handleUpdate();
-          // } else {
-          //   form.handleSubmit(onSubmit, onError)();
-          // }
         }}
         className="flex flex-col gap-6"
       >
-        {/*<h2 className="text-lg font-semibold">*/}
-        {/*  Main Info <Required />*/}
-        {/*</h2>*/}
         <FormField
           control={form.control}
           name="url"
@@ -152,21 +106,11 @@ export function ProductsSubmitInfo(props: {
                 Link to the Product
               </FormLabel>
               <FormControl>
-                {/*<div className="flex flex-row gap-2 items-center">*/}
                 <Input
                   disabled={true}
                   placeholder="https://your-product.url"
                   {...field}
                 />
-                {/*<Button*/}
-                {/*  onClick={() => {*/}
-                {/*    form.setValue('submitOption', 'crawl-product-info');*/}
-                {/*  }}*/}
-                {/*  disabled={true}*/}
-                {/*>*/}
-                {/*  {isCrawling ? 'Loading...' : 'Auto-fill'}*/}
-                {/*</Button>*/}
-                {/*</div>*/}
               </FormControl>
               <FormMessage/>
             </div>
@@ -342,31 +286,17 @@ export function ProductsSubmitInfo(props: {
             </div>
           )}
         />
-        {/*{mode === 'new' && (*/}
-        {/*  <Button*/}
-        {/*    disabled={loading}*/}
-        {/*    onClick={() => {*/}
-        {/*      form.setValue('submitOption', 'free-submit');*/}
-        {/*    }}*/}
-        {/*    type="submit"*/}
-        {/*    size={'lg'}*/}
-        {/*    className="w-full"*/}
-        {/*  >*/}
-        {/*    Next Step: Select Submission Plan*/}
-        {/*  </Button>*/}
-        {/*)}*/}
-        {/*{mode === 'edit' && (*/}
         <Button
           disabled={loading}
           size="lg"
           type="submit"
+          className='max-w-sm'
           onClick={() => {
             form.setValue('submitOption', 'update');
           }}
         >
           Next Step: Select Submission Plan
         </Button>
-        {/*)}*/}
       </form>
     </Form>
   );

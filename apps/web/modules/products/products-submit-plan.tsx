@@ -31,8 +31,8 @@ import {
 const badgeEmbedCode = `
 <a href="{{endpointUrl}}/products/{{productIdOrSlug}}" target="_blank">
 <img src="{{endpointUrl}}/api/products/{{productIdOrSlug}}/badge.svg?theme={{theme}}"
-  style="width: 230px; height: 54px;"
-  width="230"
+  style="width: 180px; height: 54px;"
+  width="180"
   height="54" />
 </a>
 `;
@@ -167,11 +167,15 @@ function FreeSubmitOption(props: {
     <div className="border border-gray-300 rounded-md p-4 bg-gray-50 text-center">
       <h3 className="text-xl font-semibold">Free Submit</h3>
       <h4 className="text-sm text-gray-500 ml-2">
-        Embed widget and write reviews to get listed
+        Embed badge on your website and free listing
       </h4>
-
       <div className="text-start py-4">
-        <h4>1. Embed a widget on your website:</h4>
+        <ul className="text-start list-disc pl-4 mt-4">
+          <li>Make sure your website's Domain Rating (DR) is greater than 0</li>
+          <li>Embed the badge on your website and submit for verification</li>
+          <li>Once verified, your product will be listed for free</li>
+          <li>Maintain the badge and DR, or your product may be removed</li>
+        </ul>
         <div className="flex flex-col items-start gap-8 px-3 py-3">
           <div className="flex flex-col gap-1">
             <div dangerouslySetInnerHTML={{__html: badgeEmbedCodeLight}}/>
@@ -215,11 +219,10 @@ function FreeSubmitOption(props: {
           form.setValue('submitOption', 'free-submit');
         }}
       >
-        {loading ? (
-          <LoadingText>Submitting...</LoadingText>
-        ) : (
-          'Verify and Submit'
-        )}
+        <LoadingText
+          isLoading={loading}
+                     loadingText={'Verifying...'}
+          normalText={'Verify and Submit'}/>
       </Button>
     </div>
   );
@@ -239,7 +242,7 @@ export function ProductsSubmitPlan(props: {
   });
 
   const router = useRouter();
-  const {user, syncSession} = useUserContext();
+  const {user} = useUserContext();
   const [loading, setLoading] = useState<boolean>(false);
   const [isCheckDialogOpen, setIsCheckDialogOpen] = useState(false);
 
@@ -266,8 +269,7 @@ export function ProductsSubmitPlan(props: {
       if (response.code === 200) {
         setLoading(false);
         toast.success('Product Submitted Successfully!');
-        await syncSession();
-        router.push(`/dashboard/${productId}/overview`);
+        router.push(`/dashboard/products`);
       } else if (response.code === 600) {
         const data = response.data as CreateOneTimePaymentResponse;
         const {sessionUrl} = data;

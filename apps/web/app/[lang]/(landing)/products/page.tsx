@@ -25,7 +25,7 @@ async function fetchStaticData(lang: string) {
   ]
   //random
   todayProducts.sort(() => Math.random() - 0.5);
-  const productCategories = await api.productCategories.findAll({
+  const productCategories = await api.productCategories.findList({
     page: 1,
     pageSize: 12,
   })

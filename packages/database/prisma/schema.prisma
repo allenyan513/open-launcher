@@ -113,7 +113,7 @@ model Product {
   tagline         String        @default("")
   description     String        @default("")
   featured        Boolean       @default(false)
-  group           String        @default("")
+  voteCount       Int           @default(0)
   longDescription String?
   features        String?
   useCase         String?

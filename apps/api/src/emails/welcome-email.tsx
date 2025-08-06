@@ -22,36 +22,30 @@ export const WelcomeEmail = (props: { userName: string }) => {
       <Head />
       <Body style={main}>
         <Preview>
-          Welcome to Reviewsup.io! We are excited to have you on board. Click
+          Welcome to FF2050.AI! We are excited to have you on board. Click
           the button below to get started.
         </Preview>
         <Container style={container}>
           <Section style={box}>
             <Img
               style={logo}
-              src={`https://reviewsup.io/img/logo-128.png`}
+              src={`https://ai.ff2050.com/img/favicon-32.png`}
               width="49"
               height="49"
-              alt="reviewsup.io logo"
+              alt="ff2050.ai logo"
             />
             <Text style={paragraph}>Dear {userName || 'User'},</Text>
             <Text style={paragraph}>
-              Thank you for signing up Reviewsup.io, we are glad to see you
+              Thank you for signing up FF2050.AI, we are glad to see you
               here!
             </Text>
             <Text style={paragraph}>
               You can submit issues and ask questions on our GitHub. If you want
-              to support us, your ⭐ will make Tolgee shine more!
+              to support us, your ⭐ will make us more motivated!
             </Text>
-            <Button style={button} href="https://reviewsup.io">
+            <Button style={button} href="https://ai.ff2050.com/dashboard">
               Go to Dashboard
             </Button>
-            <Text style={footer}>
-              {/*Powered by{' '}*/}
-              {/*<Link href="https://reviewsup.io" style={anchor}>*/}
-              {/*  Reviewsup.io*/}
-              {/*</Link>*/}
-            </Text>
           </Section>
         </Container>
       </Body>

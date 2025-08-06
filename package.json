@@ -17,7 +17,7 @@
     "db:generate": "turbo run db:generate",
     "db:migrate": "turbo run db:migrate",
     "db:migrate:deploy": "turbo run db:migrate:deploy",
-    "stripe:listen": "stripe listen --forward-to=localhost:5500/orders/webhook",
+    "stripe:listen": "stripe listen --forward-to=localhost/api/orders/webhook",
     "cp-env": "sh ./scripts/cp-env.sh",
     "clean": "sh ./scripts/clean.sh"
   },

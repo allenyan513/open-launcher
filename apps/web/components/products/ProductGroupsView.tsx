@@ -96,10 +96,9 @@ async function fetchData(lang: string) {
     const productsResponse = await api.products.findAll({
       page: 1,
       pageSize: 12,
-      group: item.name,
     })
 
-    const productCategoriesResponse = await api.productCategories.findAll({
+    const productCategoriesResponse = await api.productCategories.findList({
       page: 1,
       pageSize: 5,
       group: item.name,

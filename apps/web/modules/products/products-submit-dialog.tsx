@@ -25,6 +25,7 @@ import {useForm} from 'react-hook-form';
 import {zodResolver} from '@hookform/resolvers/zod';
 import {api} from '@repo/shared';
 import {useRouter} from "next/navigation";
+import {LoadingText} from "@repo/ui/loading-text";
 
 export function ProductSubmitDialog(props: {}) {
   const [isOpen, setIsOpen] = useState<boolean>(false);
@@ -117,23 +118,27 @@ export function ProductSubmitDialog(props: {}) {
                 </div>
               )}
             />
-            <Button
-              type="submit"
-              disabled={loading}
-              className="ml-2"
-            >
-              Continue
-            </Button>
+
+            <DialogFooter className="">
+              <DialogClose asChild>
+                <Button type="button" variant="secondary">
+                  Close
+                </Button>
+              </DialogClose>
+              <Button
+                type="submit"
+                disabled={loading}
+                className="ml-2"
+              >
+                <LoadingText
+                  isLoading={loading}
+                  loadingText={'Loading...'}
+                  normalText={'Continue'}/>
+              </Button>
+            </DialogFooter>
           </form>
         </Form>
-        <DialogFooter className="">
-          <DialogClose asChild>
-            <Button type="button" variant="secondary">
-              Close
-            </Button>
-          </DialogClose>
 
-        </DialogFooter>
       </DialogContent>
     </Dialog>
   );

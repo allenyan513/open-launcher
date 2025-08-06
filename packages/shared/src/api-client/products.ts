@@ -25,13 +25,13 @@ export const products = {
   create: (request: SimpleCreateProductRequest): Promise<ProductEntity> =>
     authFetch(`/api/products`, 'POST', request),
   submit: (request: SubmitProductRequest,): Promise<RRResponse<ProductEntity | CreateOneTimePaymentResponse>> =>
-    authFetch('/products/submit', 'POST', request),
+    authFetch('/api/products/submit', 'POST', request),
 
   crawlOne: (url: string): Promise<CrawlProductResponse> =>
     authFetch(`/api/products/crawl`, 'POST', {url}),
   updateOne: (id: string, data: ProductEntity): Promise<ProductEntity> =>
     authFetch(`/api/products/${id}`, 'PATCH', data),
   deleteOne: (id: string) =>
-    authFetch(`/products/${id}`, 'DELETE', {}),
+    authFetch(`/api/products/${id}`, 'DELETE', {}),
 
 };

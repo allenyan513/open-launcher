@@ -10,7 +10,7 @@ export default async function Hero(props: {
     page: 1,
     pageSize: 12,
   })
-  const productCategories = await api.productCategories.findAll({
+  const productCategories = await api.productCategories.findList({
     page: 1,
     pageSize: 12,
   })

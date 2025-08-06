@@ -108,12 +108,19 @@ export function columns(
               <DropdownMenuItem
                 className="cursor-pointer"
                 onClick={() => {
+                  router.push(`/products/${product.slug}`);
+                }}
+              >
+                View
+              </DropdownMenuItem>
+              <DropdownMenuItem
+                className="cursor-pointer"
+                onClick={() => {
                   router.push(`/dashboard/products/${product.id}`);
                 }}
               >
                 Edit
               </DropdownMenuItem>
-              <DropdownMenuSeparator/>
               <DropdownMenuItem
                 className="cursor-pointer text-red-500">
                 Delete

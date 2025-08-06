@@ -1,27 +1,38 @@
-import { Popover, PopoverTrigger, PopoverContent } from '@repo/ui/popover';
-import { Button } from '@repo/ui/button';
-import { Command, CommandItem } from '@repo/ui/command';
-import { X } from 'lucide-react';
-import { useRef, useState } from 'react';
+import {Popover, PopoverTrigger, PopoverContent} from '@repo/ui/popover';
+import {Button} from '@repo/ui/button';
+import {Command, CommandItem} from '@repo/ui/command';
+import {X} from 'lucide-react';
+import {useEffect, useRef, useState} from 'react';
 import {
   FormField,
   FormControl,
   FormLabel,
   FormMessage,
 } from '@repo/ui/form';
-import { ProductCategoryGroup } from '@repo/shared/types';
+import {ProductCategoryEntity} from '@repo/shared/types';
+import {api} from "@repo/shared";
 
-const categories = Object.entries(ProductCategoryGroup);
-
-export function TagSelectorFormField({ form }: { form: any }) {
+export function TagSelectorFormField({form}: { form: any }) {
   const [open, setOpen] = useState(false);
   const buttonRef = useRef<HTMLButtonElement>(null);
+  const [productCategories, setProductCategories] = useState<ProductCategoryEntity[]>([]);
+
+  useEffect(() => {
+    api.productCategories
+      .findAll()
+      .then((categories) => {
+        setProductCategories(categories);
+      })
+      .catch((error) => {
+        console.error('Error fetching product categories:', error);
+      });
+  }, []);
 
   return (
     <FormField
       control={form.control}
-      name="tags"
-      render={({ field }) => {
+      name="productCategoryIds"
+      render={({field}) => {
         const selected = field.value || [];
 
         const handleSelect = (value: string) => {
@@ -37,7 +48,7 @@ export function TagSelectorFormField({ form }: { form: any }) {
 
         return (
           <div>
-            <FormLabel className="mb-2 text-md">Tags</FormLabel>
+            <FormLabel className="mb-2 text-md">Product Categories</FormLabel>
             <FormControl>
               <div>
                 <Popover open={open} onOpenChange={setOpen}>
@@ -53,21 +64,21 @@ export function TagSelectorFormField({ form }: { form: any }) {
                     </Button>
                   </PopoverTrigger>
                   <PopoverContent
-                    style={{ width: buttonRef.current?.offsetWidth }}
-                    className="p-0"
+                    style={{width: buttonRef.current?.offsetWidth}}
+                    className="p-0 max-h-[300px] overflow-y-auto"
                   >
                     <Command>
-                      {categories.map(([key, value]) => (
+                      {productCategories.map((item, index) => (
                         <CommandItem
                           className='text-md'
-                          key={key}
-                          value={key}
+                          key={item.id}
+                          value={item.id}
                           onSelect={() => {
-                            handleSelect(key);
+                            handleSelect(item.id || '');
                           }}
-                          disabled={selected.includes(key)}
+                          disabled={selected.includes(item.id)}
                         >
-                          {value}
+                          {item.name}
                         </CommandItem>
                       ))}
                     </Command>
@@ -79,23 +90,20 @@ export function TagSelectorFormField({ form }: { form: any }) {
                       key={tagKey}
                       className="flex items-center gap-1 bg-muted px-2 py-1 rounded-md text-sm"
                     >
-                      <span>{
-                        categories.find(([key]) => key === tagKey)?.[1] || tagKey
-
-                      }</span>
+                      <span>{productCategories.find((item) => item.id === tagKey)?.name || tagKey}</span>
                       <button
                         type="button"
                         onClick={() => handleRemove(tagKey)}
                         className="text-muted-foreground hover:text-red-500"
                       >
-                        <X size={14} />
+                        <X size={14}/>
                       </button>
                     </div>
                   ))}
                 </div>
               </div>
             </FormControl>
-            <FormMessage />
+            <FormMessage/>
           </div>
         );
       }}

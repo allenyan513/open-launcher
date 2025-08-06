@@ -11,7 +11,7 @@ export class ProductCategoriesService {
   constructor(private prismaService: PrismaService,) {
   }
 
-  async findAll(
+  async findList(
     request: FindAllProductCategoriesRequest,
   ): Promise<PaginateResponse<ProductCategoryEntity>> {
     const {group} = request
@@ -46,6 +46,7 @@ export class ProductCategoriesService {
       },
     };
   }
+
   async findAllSlug(): Promise<string[]> {
     const products = await this.prismaService.productCategory.findMany({
       select: {
@@ -53,6 +54,24 @@ export class ProductCategoriesService {
       },
     });
     return products.map(product => product.slug);
+  }
+
+  async findAll(): Promise<ProductCategoryEntity[]> {
+    const products = await this.prismaService.productCategory.findMany({
+      select: {
+        id: true,
+        name: true,
+        slug: true,
+      },
+      orderBy: {
+        name: 'asc', // Order by name
+      },
+    });
+    return products.map(product => ({
+      id: product.id,
+      name: product.name,
+      slug: product.slug,
+    }));
   }
 
   /**

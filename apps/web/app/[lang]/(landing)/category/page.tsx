@@ -30,7 +30,7 @@ async function getAllCategories() {
   const result = []
   // sort by item.name
   for (const item of PRODUCT_CATEGORY_GROUP.sort((a, b) => a.name.localeCompare(b.name))) {
-    const categories = await api.productCategories.findAll({
+    const categories = await api.productCategories.findList({
       page: 1,
       pageSize: 100,
       group: item.name,
