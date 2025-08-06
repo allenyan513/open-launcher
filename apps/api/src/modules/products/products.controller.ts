@@ -102,12 +102,6 @@ export class ProductsController {
     return this.productsService.remove(jwt.userId, id);
   }
 
-  @Get('public/slug/:slug')
-  async publicSlug(@Param('slug') slug: string) {
-    return this.productsService.findOne(slug);
-  }
-
-
   @UseGuards(JwtAuthGuard)
   @Post('my/findAll')
   async findMyAll(

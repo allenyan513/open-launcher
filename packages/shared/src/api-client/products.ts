@@ -18,7 +18,7 @@ export const products = {
     authFetch(`/api/products/findAll`, 'POST', request),
   findMyAll: (request: FindAllRequest): Promise<PaginateResponse<ProductEntity>> =>
     authFetch(`/api/products/my/findAll`, 'POST', request),
-  findOne: (id: string): Promise<ProductEntity> =>
+  findOne: (id: string): Promise<ProductEntity | null> =>
     authFetch(`/api/products/${id}`, 'GET'),
   findAllSlug: (): Promise<string[]> =>
     authFetch(`/api/products/findAllSlug`, 'GET'),

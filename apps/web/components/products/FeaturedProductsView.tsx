@@ -11,8 +11,14 @@ export default async function FeaturedProductsView(props: {
   const featuredProducts = await api.products.findAll({
     page: 1,
     pageSize: 10,
-    status: ['approved']
+    status: ['approved'],
+    orderBy: {
+      field: 'featured',
+      direction: 'desc'
+    }
   })
+  //random
+  featuredProducts.items.sort(() => Math.random() - 0.5);
 
   return (
     <div className={props.className}>

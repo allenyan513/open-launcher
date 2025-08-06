@@ -272,9 +272,7 @@ export class ProductsService {
     uid: string,
     request: FindAllRequest,
   ): Promise<PaginateResponse<ProductEntity>> {
-    // this.logger.debug('request to findAll products', request);
     const {status, group, search, tags, orderBy, productCategorySlug} = request;
-    // if exists productCategorySlug, find productCategoryId
     let productCategoryId = request.productCategoryId;
     if (productCategorySlug) {
       const productCategory = await this.prismaService.productCategory.findFirst({
@@ -288,7 +286,15 @@ export class ProductsService {
       if (productCategory) {
         productCategoryId = productCategory.id;
       } else {
-        throw new BadRequestException(`Product category with slug ${productCategorySlug} not found`);
+        return {
+          items: [],
+          meta: {
+            page: request.page,
+            pageSize: request.pageSize || 10,
+            total: 0,
+            pageCount: 0,
+          }
+        }
       }
     }
 
@@ -368,11 +374,11 @@ export class ProductsService {
     return products.map(product => product.slug);
   }
 
-    /**
+  /**
    *
    * @param id or slug
    */
-  async findOne(id: string): Promise<ProductEntity> {
+  async findOne(id: string): Promise<ProductEntity | null> {
     const product = await this.prismaService.product.findFirst({
       where: {
         OR: [{id: id}, {slug: id}],
@@ -388,7 +394,7 @@ export class ProductsService {
       },
     });
     if (!product) {
-      throw new BadRequestException(`Product with ID ${id} not found`);
+      return null
     }
     const user = await this.prismaService.user.findUnique({
       where: {

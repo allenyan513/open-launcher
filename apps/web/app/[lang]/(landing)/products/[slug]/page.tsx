@@ -9,6 +9,7 @@ import FeaturedProductsView from "@/components/products/FeaturedProductsView";
 import {useTranslate} from "@/i18n/dictionaries";
 import {getStrapiMedia, formatMonthlyVisit, getFormatData2} from "@/utils";
 import {api} from "@repo/shared";
+import {notFound} from "next/navigation";
 
 
 export async function generateMetadata(props: {
@@ -18,7 +19,7 @@ export async function generateMetadata(props: {
   }>
 }): Promise<Metadata | null> {
   const {lang, slug} = await props.params
-  const product = await api.products.findOne(slug);
+  const product = await api.products.findOne(slug)
   if (!product) {
     return null
   }
@@ -45,9 +46,8 @@ export default async function ProductPage(props: {
   const t = await useTranslate(lang)
   const product = await api.products.findOne(slug)
   if (!product) {
-    return null
+    notFound()
   }
-  //todo
   const mainProductCategory = product.productCategories ? product.productCategories[0] : null
   const breadCrumbData: BreadCrumbProps = {
     data: [
@@ -75,9 +75,8 @@ export default async function ProductPage(props: {
   }
 
   if (!product) {
-    return null;
+    notFound()
   }
-
   return (
     <>
       <div className='flex flex-col gap-8 pt-24 pb-12 px-4'>
@@ -91,7 +90,7 @@ export default async function ProductPage(props: {
           )}
           <div className='flex flex-col'>
             <h1 className="text-2xl font-semibold">{product.name}</h1>
-            <h2 className='text-gray-500 line-clamp-1'>{product.description}</h2>
+            <h2 className='text-gray-500 line-clamp-1'>{product.tagline}</h2>
           </div>
         </div>
         <div className='flex flex-col lg:flex-row gap-8'>

@@ -5,6 +5,7 @@ import ProductCategoryInformationView from "@/components/products/ProductCategor
 import FeaturedProductsView from "@/components/products/FeaturedProductsView";
 import {useTranslate} from "@/i18n/dictionaries";
 import {api, ProductEntity} from "@repo/shared";
+import { notFound } from "next/navigation";
 
 
 export async function generateMetadata(props: {
@@ -93,6 +94,10 @@ export default async function ProductCategoryListPage(props: {
       url: `/${lang}/category/${staticData.productCategory.slug}`
     }
   ]
+
+  if(!staticData.products || staticData.products.length === 0) {
+    notFound();
+  }
 
   return (
     <>
