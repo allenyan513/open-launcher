@@ -374,7 +374,7 @@ export class ProductsService {
    * @param id or slug
    */
   async findOne(id: string): Promise<ProductEntity | null> {
-    const product = await this.prismaService.product.findFirst({
+    return this.prismaService.product.findFirst({
       where: {
         OR: [{id: id}, {slug: id}],
       },
@@ -386,25 +386,16 @@ export class ProductsService {
             slug: true,
           },
         },
+        user: {
+          select: {
+            id: true,
+            name: true,
+            avatarUrl: true,
+          },
+        },
+        productContents: true,
       },
     });
-    if (!product) {
-      return null
-    }
-    const user = await this.prismaService.user.findUnique({
-      where: {
-        id: product.userId,
-      },
-      select: {
-        id: true,
-        name: true,
-        avatarUrl: true,
-      },
-    });
-    return {
-      ...product,
-      user: user,
-    } as ProductEntity;
   }
 
   async update(uid: string, id: string, dto: UpdateProductRequest) {

@@ -26,11 +26,15 @@ export async function generateMetadata(props: {
   if (!product) {
     return null
   }
+  const name = product.name;
+  const tagline = product?.productContents?.find((content) => content.language === lang)?.tagline || product.tagline || '';
+  const description = product?.productContents?.find((content) => content.language === lang)?.description || product.description || '';
+
   return {
-    title: `${product.name}: ${product.description}`.substring(0, 60),
-    description: `${product.name}: ${product.longDescription}.`.substring(0, 160),
+    title: `${name}: ${tagline} | ${websiteConfig.websiteName}`,
+    description: `${description}`,
     alternates: {
-      canonical: `${process.env.NEXT_PUBLIC_DOMAIN_URL}/${lang}/products/${slug}`,
+      canonical: `${process.env.NEXT_PUBLIC_ENDPOINT_URL}/${lang}/products/${slug}`,
     }
   }
 }
@@ -51,6 +55,17 @@ export default async function ProductPage(props: {
   if (!product) {
     notFound()
   }
+
+  const name = product.name;
+  const tagline = product?.productContents?.find((content) => content.language === lang)?.tagline || product.tagline || '';
+  const description = product?.productContents?.find((content) => content.language === lang)?.description || product.description || '';
+  const longDescription = product?.productContents?.find((content) => content.language === lang)?.longDescription || product.longDescription || '';
+  const features = product?.productContents?.find((content) => content.language === lang)?.features || product.features || '';
+  const useCase = product?.productContents?.find((content) => content.language === lang)?.useCase || product.useCase || '';
+  const howToUse = product?.productContents?.find((content) => content.language === lang)?.howToUse || product.howToUse || '';
+  const faq = product?.productContents?.find((content) => content.language === lang)?.faq || product.faq || '';
+
+
   const mainProductCategory = product.productCategories ? product.productCategories[0] : null
   const breadCrumbData: BreadCrumbProps = {
     data: [
@@ -83,6 +98,7 @@ export default async function ProductPage(props: {
   return (
     <div className='flex flex-col md:grid md:grid-cols-12 gap-8 pt-24 pb-12 px-4'>
       <div className='md:col-span-9 flex flex-col gap-4'>
+        <BreadCrumb data={breadCrumbData.data}/>
         {/*header*/}
         <div className="flex flex-col lg:flex-row gap-2 items-start lg:items-center justify-between">
           <div className="flex flex-row items-center gap-4">
@@ -99,7 +115,7 @@ export default async function ProductPage(props: {
                 {product.name}
               </h1>
               <h2 className="text-gray-500 line-clamp-1 max-w-lg">
-                {product.tagline}
+                {tagline}
               </h2>
             </div>
           </div>
@@ -135,7 +151,7 @@ export default async function ProductPage(props: {
         </div>
         {/*Description*/}
         <p className="text-gray-700 text-md">
-          {product.description || 'No description available for this product.'}
+          {description || 'No description available for this product.'}
         </p>
         {/*ScreenShots*/}
         {product.screenshots && product.screenshots.length > 0 && (
@@ -167,42 +183,34 @@ export default async function ProductPage(props: {
           <div className='flex flex-col rounded border border-gray-300 px-5 py-4 gap-2 bg-white'>
             <h2 className='h3'>{`What is ${product.name}`}</h2>
             <RichText data={{
-              body: product.longDescription || '',
+              body: longDescription,
             }}/>
             <div className='divider'/>
 
             <h2 className='h3'>{`How to use ${product.name}`}</h2>
             <RichText data={{
-              body: product.howToUse || '',
+              body: howToUse,
             }}/>
             <div className='divider'/>
 
             <h2 className='h3'>{`Core features of ${product.name}`}</h2>
             <RichText data={{
-              body: product.features || '',
+              body: features,
             }}/>
             <div className='divider'/>
 
             {/*Use Cases*/}
-            {product.useCase && product.useCase.length > 0 && (
-              <>
-                <h2 className='h3'>{`Use Cases of ${product.name}`}</h2>
-                <RichText data={{
-                  body: product.useCase || '',
-                }}/>
-                <div className='divider'/>
-              </>
-            )}
+            <h2 className='h3'>{`Use Cases of ${product.name}`}</h2>
+            <RichText data={{
+              body: useCase,
+            }}/>
+            <div className='divider'/>
             {/*FAQs*/}
-            {product.faq && product.faq.length > 0 && (
-              <>
-                <h2 className='h3'>{`FAQ from ${product.name}`}</h2>
-                <RichText data={{
-                  body: product.faq || '',
-                }}/>
-                <div className='divider'/>
-              </>
-            )}
+            <h2 className='h3'>{`FAQ from ${product.name}`}</h2>
+            <RichText data={{
+              body: faq,
+            }}/>
+            <div className='divider'/>
             <ProductUrlView productName={product.name || ''} urlName={'Reddit'} url={product.redditUrl || ''}/>
             <ProductUrlView productName={product.name || ''} urlName={'YouTube'} url={product.youtubeUrl || ''}/>
             <ProductUrlView productName={product.name || ''} urlName={'Twitter'} url={product.twitterUrl || ''}/>
@@ -222,7 +230,7 @@ export default async function ProductPage(props: {
         <div className={'text-sm text-gray-500 gap-4 flex flex-col'}>
           <p>PUBLISHER</p>
           <div className="flex flex-row gap-2 items-center">
-            <Avatar className="h-8 w-8 rounded-lg grayscale">
+            <Avatar className="h-8 w-8 rounded-full grayscale">
               <AvatarImage src={product.user?.avatarUrl} alt={product.user?.name}/>
               <AvatarFallback className="rounded-lg">CN</AvatarFallback>
             </Avatar>

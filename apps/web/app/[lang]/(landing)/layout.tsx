@@ -1,5 +1,5 @@
-import { Header } from '@/components/landing/header';
-import { Footer } from '@/components/landing/footer';
+import {Header} from '@/components/landing/header';
+import {Footer} from '@/components/landing/footer';
 
 export default async function RootLayout(props: {
   params: Promise<{
@@ -7,7 +7,7 @@ export default async function RootLayout(props: {
   }>;
   children: React.ReactNode;
 }) {
-  const { lang } = await props.params;
+  const {lang} = await props.params;
   return (
     <>
       <Header
@@ -17,9 +17,9 @@ export default async function RootLayout(props: {
         githubLink="https://github.com/allenyan513/open-launcher"
         appLink={`${process.env.NEXT_PUBLIC_ENDPOINT_URL}/dashboard`}
         items={[
-          { title: 'Launches', href: '/launches' },
-          { title: 'Products', href: '/products' },
-          { title: 'Category', href: '/category' },
+          {title: 'Launches', href: `/${lang}/launches`},
+          {title: 'Products', href: `/${lang}/products`},
+          {title: 'Category', href: `/${lang}/category`},
         ]}
       />
       <main className="flex flex-col items-center justify-between w-full max-w-7xl mx-auto">{props.children}</main>

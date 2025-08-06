@@ -97,6 +97,7 @@ export const productSchema = z.object({
   createdAt: z.date(),
   updatedAt: z.date(),
   user: z.any().optional(),
+  productContents: z.lazy(() => z.array(productContentSchema)).optional(),
 });
 
 export type ProductEntity = z.infer<typeof productSchema>;
@@ -124,3 +125,20 @@ export const crawlProductResponseSchema = z.object({
   screenshotUrl: z.string().url('Invalid URL').optional(),
 });
 export type CrawlProductResponse = z.infer<typeof crawlProductResponseSchema>;
+
+export const productContentSchema = z.object({
+  id: z.string().min(1, 'Product Content ID is required'),
+  productId: z.string().min(1, 'Product ID is required'),
+  language: z.string().min(1, 'Language is required'),
+  tagline: z.string().optional(),
+  description: z.string().optional(),
+  longDescription: z.string().optional(),
+  features: z.string().optional(),
+  useCase: z.string().optional(),
+  howToUse: z.string().optional(),
+  faq: z.string().optional(),
+  createdAt: z.date(),
+  updatedAt: z.date(),
+})
+
+export type ProductContentEntity = z.infer<typeof productContentSchema>;

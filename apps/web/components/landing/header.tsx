@@ -171,7 +171,7 @@ function SignInButton(props: { className?: string }) {
     return (
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
-          <Avatar className="h-8 w-8 rounded-lg grayscale cursor-pointer">
+          <Avatar className="h-8 w-8 rounded-full grayscale cursor-pointer">
             <AvatarImage src={user?.avatarUrl} alt={user?.name}/>
             <AvatarFallback className="rounded-full bg-gray-200 text-gray-800">
               {user?.name?.charAt(0).toUpperCase() || 'CN'}
