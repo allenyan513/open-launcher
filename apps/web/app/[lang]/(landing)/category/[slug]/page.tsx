@@ -26,6 +26,9 @@ export async function generateMetadata(props: {
 }
 
 export async function generateStaticParams() {
+  if (process.env.NEXT_PUBLIC_SKIP_SSG === 'true') {
+    return []
+  }
   const allSlugs = await api.productCategories.findAllSlug();
   const staticLangs = ['en']
   const result =  staticLangs.map((lang) => {

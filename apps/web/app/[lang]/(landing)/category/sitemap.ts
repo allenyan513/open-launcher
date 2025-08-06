@@ -13,9 +13,11 @@ export async function generateSitemaps() {
 export default async function sitemap(props: {
   id: string
 }): Promise<MetadataRoute.Sitemap> {
+  if (process.env.NEXT_PUBLIC_SKIP_SSG === 'true') {
+    return []
+  }
   const result: any[] = []
   const allSlugs = await api.productCategories.findAllSlug()
-  // const allSlugs: string[] = []
   for (const slug of allSlugs) {
     result.push({
       url: `${process.env.NEXT_PUBLIC_ENDPOINT_URL}/${props.id}/category/${slug}`,

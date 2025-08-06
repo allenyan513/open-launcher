@@ -19,6 +19,9 @@ export async function generateMetadata(props: {
 }
 
 export async function generateStaticParams() {
+  if (process.env.NEXT_PUBLIC_SKIP_SSG === 'true') {
+    return []
+  }
   return i18n.locales.map((lang) => {
     return {
       lang: lang

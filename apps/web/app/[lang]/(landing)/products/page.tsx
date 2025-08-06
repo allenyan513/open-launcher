@@ -1,14 +1,13 @@
 import {Metadata} from "next";
-import {i18n} from "@/config/i18n-config";
 import ProductListView from "@/components/products/ProductListView";
 import ProductCompatListView from "@/components/products/ProductCompactListView";
 import FeaturedProductsView from "@/components/products/FeaturedProductsView";
 import Hero from "@/components/products/Hero";
 import ProductTagsView from "@/components/products/ProductTagsView";
 import ProductGroupsView from "@/components/products/ProductGroupsView";
-import {getLetterFromDate} from "@repo/shared/utils";
 import {api} from "@repo/shared";
 import {useTranslate} from "@/i18n/dictionaries";
+import {i18n} from "@/config/i18n-config";
 
 // export const revalidate = 86400;
 
@@ -53,6 +52,9 @@ export async function generateMetadata(props: {
 }
 
 export async function generateStaticParams(props: any) {
+  if (process.env.NEXT_PUBLIC_SKIP_SSG === 'true') {
+    return []
+  }
   return i18n.locales.map((lang) => {
     return {
       lang: lang

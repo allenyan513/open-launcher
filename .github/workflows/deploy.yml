@@ -34,13 +34,7 @@ jobs:
       - name: Decrypt .env.production.gpg file
         run: |
           gpg --quiet --batch --yes --decrypt --passphrase="${{ secrets.GPG_PASSPHRASE }}" \
-          --output .env.production .env.production.gpg
-
-      - name: Copy .env.production to .env
-        run: cp .env.production .env
-
-      - name: Load .env file
-        run: |
+          --output .env .env.production.gpg
           set -a
           source .env
           set +a
