@@ -48,11 +48,6 @@ export class ProductCategoriesService {
   }
   async findAllSlug(): Promise<string[]> {
     const products = await this.prismaService.productCategory.findMany({
-      where: {
-        slug: {
-          not: null,
-        },
-      },
       select: {
         slug: true,
       },
