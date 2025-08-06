@@ -47,6 +47,7 @@
     "passport-twitter": "^0.1.5",
     "puppeteer": "^24.8.2",
     "react": "^19.1.0",
+    "react-dom": "^19.1.0",
     "resend": "^4.7.0",
     "slugify": "^1.6.6",
     "stripe": "^18.1.1",
