@@ -11,7 +11,7 @@ jobs:
 
     env:
       ZIP_NAME: app.zip
-      REMOTE_PATH: /home/ec2-user/reviewsup.io
+      REMOTE_PATH: /home/ec2-user/open-product-hunt
 
     steps:
       - name: Checkout code
@@ -78,6 +78,5 @@ jobs:
             corepack prepare pnpm@latest --activate
 
             pnpm install --only production --frozen-lockfile
-#            chmod +x apps/docs/start.sh
             chmod +x apps/web/start.sh
             pnpm run pm2:start
