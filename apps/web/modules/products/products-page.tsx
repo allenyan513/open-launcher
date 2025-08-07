@@ -19,10 +19,10 @@ export function ProductsPage(props: {
     const res = await api.products.findMyAll({
       page: pageIndex + 1,
       pageSize: pageSize,
-      orderBy: {
+      orderBy: [{
         field: 'createdAt',
         direction: 'desc'
-      },
+      }],
     });
     return {
       data: res.items,

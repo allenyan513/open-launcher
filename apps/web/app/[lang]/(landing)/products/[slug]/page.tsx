@@ -1,13 +1,12 @@
 import Link from "next/link";
 import RichText from "@/components/products/RichText";
 import BreadCrumb, {BreadCrumbProps} from "@/components/products/BreadCrumb";
-import {BsBoxArrowUp} from "react-icons/bs";
 import ProductListView from "@/components/products/ProductListView";
 import ProductUrlView from "@/components/products/ProductUrlView";
 import {Metadata} from "next";
 import FeaturedProductsView from "@/components/products/FeaturedProductsView";
 import {useTranslate} from "@/i18n/dictionaries";
-import {getStrapiMedia, formatMonthlyVisit, getFormatData2, generateAuthFetchOptions} from "@/utils";
+import {getStrapiMedia, getFormatData2,} from "@/utils";
 import {api} from "@repo/shared";
 import {notFound} from "next/navigation";
 import {Avatar, AvatarFallback, AvatarImage} from "@repo/ui/avatar";
