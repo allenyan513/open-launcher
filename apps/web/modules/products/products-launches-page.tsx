@@ -16,11 +16,9 @@ export async function ProductLaunchesPage(props: {
     pageSize: 20,
   });
   const session = await getSession()
-  console.log('products', products);
   if (!products || !products.items || products.items.length === 0) {
     notFound()
   }
-
   return (
     <>
       <h2 className="text-xl md:text-3xl font-bold px-4 pb-4">
