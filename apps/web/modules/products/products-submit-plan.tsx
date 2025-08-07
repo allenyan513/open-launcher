@@ -155,12 +155,12 @@ function FreeSubmitOption(props: {
   const badgeEmbedCodeLight = getBadgeEmbedCode(
     productId,
     'light',
-    process.env.NEXT_PUBLI_ENDPOINT_URL as string,
+    process.env.NEXT_PUBLIC_ENDPOINT_URL as string,
   );
   const badgeEmbedCodeDark = getBadgeEmbedCode(
     productId,
     'dark',
-    process.env.NEXT_PUBLI_ENDPOINT_URL as string,
+    process.env.NEXT_PUBLIC_ENDPOINT_URL as string,
   );
 
   return (
