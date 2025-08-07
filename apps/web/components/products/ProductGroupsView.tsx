@@ -23,6 +23,7 @@ import {
   BsExclamationOctagon
 } from "react-icons/bs";
 import {api} from "@repo/shared";
+import {cn} from "@repo/ui/lib/utils";
 
 export const groupIconMap = [
   {
@@ -93,15 +94,21 @@ async function fetchData(lang: string) {
     productCategories: any[]
   }[] = []
   for (const item of PRODUCT_CATEGORY_GROUP) {
-    const productsResponse = await api.products.findAll({
-      page: 1,
-      pageSize: 12,
-    })
-
     const productCategoriesResponse = await api.productCategories.findList({
       page: 1,
       pageSize: 5,
       group: item.name,
+    })
+    const firstCategory = productCategoriesResponse.items[0];
+    const productsResponse = await api.products.findAll({
+      page: 1,
+      pageSize: 12,
+      status: ['approved'],
+      orderBy: {
+        field: 'voteCount',
+        direction: 'desc'
+      },
+      productCategorySlug: firstCategory?.slug || ''
     })
 
     groups.push({
@@ -133,17 +140,19 @@ export default async function ProductGroupsView(props: {
               {t(item.text)}
             </h2>
             <div className='flex flex-row flex-wrap gap-2'>
-              <Link
-                href={``}
-                key={item.name}
-                className={'flex flex-row items-center gap-2 px-3 py-1 border border-gray-300 rounded-full text-white bg-black'}>
-                <span className=''>{t('All')}</span>
-              </Link>
-              {item.productCategories.map((item) => (
+              {/*<Link*/}
+              {/*  href={``}*/}
+              {/*  key={item.name}*/}
+              {/*  className={'flex flex-row items-center gap-2 px-3 py-1 border border-gray-300 rounded-full text-white bg-black'}>*/}
+              {/*  <span className=''>{t('All')}</span>*/}
+              {/*</Link>*/}
+              {item.productCategories.map((item, index) => (
                 <Link
                   href={`/${props.lang}/category/${item.slug}`}
                   key={item.name}
-                  className={'flex flex-row items-center gap-2 px-3 py-1 border border-gray-300 rounded-full  shadow-sm hover:shadow-lg transition-shadow duration-300 text-black bg-white'}>
+                  className={cn('flex flex-row items-center gap-2 px-3 py-1 border border-gray-300 rounded-full  shadow-sm hover:shadow-lg transition-shadow duration-300 text-black bg-white',
+                    index === 0 ? 'bg-black text-white' : 'bg-white text-black hover:bg-gray-100'
+                  )}>
                   <span className='line-clamp-1'>{t(item.name)}</span>
                 </Link>
               ))}

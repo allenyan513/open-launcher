@@ -16,23 +16,14 @@ export const i18nLanguages = [
     code: 'en',
   },
   {
-    name: '简体中文',
-    url: '/zh',
-    code: 'zh',
-  },
-  // {
-  //   name: '繁體中文',
-  //   url: '/tw',
-  // },
-  {
-    name: '한국어',
-    url: '/ko',
-    code: 'ko',
+    name: 'Español',
+    url: '/es',
+    code: 'es',
   },
   {
-    name: '日本語',
-    url: '/ja',
-    code: 'ja',
+    name: 'Français',
+    url: '/fr',
+    code: 'fr',
   },
   {
     name: 'Português',
@@ -40,19 +31,24 @@ export const i18nLanguages = [
     code: 'pt',
   },
   {
-    name: 'Español',
-    url: '/es',
-    code: 'es',
-  },
-  {
     name: 'Deutsch',
     url: '/de',
     code: 'de',
   },
   {
-    name: 'Français',
-    url: '/fr',
-    code: 'fr',
+    name: '日本語',
+    url: '/ja',
+    code: 'ja',
+  },
+  {
+    name: '简体中文',
+    url: '/zh',
+    code: 'zh',
+  },
+  {
+    name: '한국어',
+    url: '/ko',
+    code: 'ko',
   },
   {
     name: 'Tiếng Việt',

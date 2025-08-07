@@ -31,7 +31,6 @@ export async function generateStaticParams() {
 
 async function getAllCategories() {
   const result = []
-  // sort by item.name
   for (const item of PRODUCT_CATEGORY_GROUP.sort((a, b) => a.name.localeCompare(b.name))) {
     const categories = await api.productCategories.findList({
       page: 1,

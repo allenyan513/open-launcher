@@ -46,7 +46,7 @@ const resources = [
   },
   {
     title: 'Terms of Service',
-    url: '/terms-of-service',
+    url: '/terms-of-use',
   },
   {
     title: 'Privacy Policy',

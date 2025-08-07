@@ -27,6 +27,7 @@ export class ProductCategoriesController {
     const validatedRequest = findAllProductCategoriesRequestSchema.parse(request);
     return this.productCategoriesService.findList(validatedRequest);
   }
+
   @Get('findAllSlug')
   async findAllSlug() {
     return this.productCategoriesService.findAllSlug();

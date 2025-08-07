@@ -107,7 +107,6 @@ export const findAllRequestSchema = z.object({
   pageSize: z.coerce.number().int().min(1).max(100).default(10).optional(),
   status: z.array(z.nativeEnum(ProductStatus)).optional(),
   search: z.string().optional(),
-  tags: z.array(z.string()).optional().default([]),
   orderBy: z.object({
     field: z.string().optional(),
     direction: z.enum(['asc', 'desc']).optional(),

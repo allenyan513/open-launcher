@@ -14,7 +14,7 @@ export class ProductCategoriesService {
   async findList(
     request: FindAllProductCategoriesRequest,
   ): Promise<PaginateResponse<ProductCategoryEntity>> {
-    const {group} = request
+    const {page, pageSize, group, orderBy} = request
     const whereCondition: any = {
       ...(group && {
         group: group
@@ -30,10 +30,10 @@ export class ProductCategoriesService {
         ...whereCondition,
       },
       orderBy: {
-        createdAt: 'desc', // Order by creation date
+        [orderBy?.field || 'createdAt']: orderBy?.direction || 'desc',
       },
-      take: request.pageSize || 10,
-      skip: (request.page - 1) * (request.pageSize || 10),
+      take: pageSize || 10,
+      skip: (page - 1) * (pageSize || 10),
     });
 
     return {

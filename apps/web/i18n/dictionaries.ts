@@ -2,14 +2,21 @@ import 'server-only';
 
 const dictionaries = {
   en: () => import('./en.json').then((module) => module.default),
+  es: () => import('./es.json').then((module) => module.default),
+  fr: () => import('./fr.json').then((module) => module.default),
+  ja: () => import('./ja.json').then((module) => module.default),
+  pt: () => import('./pt.json').then((module) => module.default),
+  de: () => import('./de.json').then((module) => module.default),
+  ko: () => import('./ko.json').then((module) => module.default),
   zh: () => import('./zh.json').then((module) => module.default),
+  vi: () => import('./vi.json').then((module) => module.default),
 };
 
 type Params = Record<string, string | number>;
 
 function interpolate(template: string, params?: Params): string {
   if (!params) return template;
-  return template.replace(/{{(.*?)}}/g, (_, key) => {
+  return template.replace(/{(.*?)}/g, (_, key) => {
     return params[key.trim()]?.toString() ?? '';
   });
 }

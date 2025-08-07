@@ -44,6 +44,10 @@ export const findAllProductCategoriesRequestSchema = z.object({
   page: z.coerce.number().int().min(1).default(1).optional(),
   pageSize: z.coerce.number().int().min(1).max(100).default(10).optional(),
   group: z.string().optional(),
+  orderBy: z.object({
+    field: z.string().optional(),
+    direction: z.enum(['asc', 'desc']).optional(),
+  }).optional(),
 });
 
 export type FindAllProductCategoriesRequest = z.infer<typeof findAllProductCategoriesRequestSchema>;

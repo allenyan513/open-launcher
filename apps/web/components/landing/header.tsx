@@ -1,7 +1,7 @@
 'use client';
 
 import {Menu, X} from 'lucide-react';
-import {useRouter, useSelectedLayoutSegment} from 'next/navigation';
+import {usePathname, useRouter} from 'next/navigation';
 import * as React from 'react';
 import Link from 'next/link';
 import {Button, buttonVariants} from '@repo/ui/button';
@@ -9,7 +9,6 @@ import {Logo} from './logo';
 import {cn} from '@repo/ui/lib/utils';
 import {useEffect, useState} from 'react';
 import {BsGithub, BsCaretDown, BsPlusCircle} from 'react-icons/bs';
-import {LanguageSwitcher} from '@/components/language-switcher';
 import {
   DropdownMenu,
   DropdownMenuContent, DropdownMenuGroup,
@@ -17,16 +16,7 @@ import {
   DropdownMenuTrigger,
 } from '@repo/ui/dropdown-menu';
 import {useUserStore} from '@/context/useUserStore';
-import {SidebarMenuButton} from "@repo/ui/sidebar";
 import {Avatar, AvatarFallback, AvatarImage} from "@repo/ui/avatar";
-import {
-  IconCreditCard,
-  IconDotsVertical,
-  IconLogout,
-  IconNotification,
-  IconTrash,
-  IconUserCircle
-} from "@tabler/icons-react";
 
 interface NavProps {
   lang?: string;
@@ -76,13 +66,12 @@ function MobileItems(props: NavProps) {
 }
 
 function DesktopItems(props: NavProps) {
-  const segment = useSelectedLayoutSegment();
-  const [open, setOpen] = React.useState(false);
+  const path = usePathname()
 
   return (
     <nav className="hidden gap-6 md:flex">
       {props.items?.map((item, index) => {
-        const isActive = item.href.startsWith(`/${segment}`);
+        const isActive = item.href.startsWith(path);
         const baseClasses = cn(
           'flex items-center text-lg font-medium transition-colors hover:text-foreground/80 sm:text-[1rem]',
           isActive ? 'text-foreground' : 'text-foreground/60',

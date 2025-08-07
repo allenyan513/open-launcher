@@ -1,5 +1,3 @@
-import './page.css'
-
 export default function TermsOfUsePage() {
 
   return (

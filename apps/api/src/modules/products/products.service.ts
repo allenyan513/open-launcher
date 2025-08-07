@@ -270,7 +270,7 @@ export class ProductsService {
     uid: string,
     request: FindAllRequest,
   ): Promise<PaginateResponse<ProductEntity>> {
-    const {status, search, tags, orderBy, productCategorySlug} = request;
+    const {status, search, orderBy, productCategorySlug} = request;
     let productCategoryId = request.productCategoryId;
     if (productCategorySlug) {
       const productCategory = await this.prismaService.productCategory.findFirst({
@@ -310,11 +310,6 @@ export class ProductsService {
           {name: {contains: search, mode: 'insensitive'}},
           {description: {contains: search, mode: 'insensitive'}},
         ],
-      }),
-      ...(tags && tags.length > 0 && {
-        tags: {
-          hasSome: tags, // Filter by tags if provided
-        },
       }),
       ...(productCategoryId && {
         productCategories: {
