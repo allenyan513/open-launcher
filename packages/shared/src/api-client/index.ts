@@ -13,3 +13,8 @@ export const api = {
   products: products,
   productCategories: productCategories,
 };
+
+export interface AuthFetchOptions {
+  headers?: HeadersInit;
+  timeout?: number;
+}

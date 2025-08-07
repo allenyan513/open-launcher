@@ -295,7 +295,6 @@ export class ProductsService {
         }
       }
     }
-
     const whereCondition: any = {
       ...(uid && {
         userId: uid, // Filter by user ID if provided
@@ -328,9 +327,9 @@ export class ProductsService {
       where: {
         ...whereCondition,
       },
-      orderBy: {
-        [orderBy?.field || 'createdAt']: orderBy?.direction || 'desc',
-      },
+      orderBy: orderBy?.map((item) => ({
+        [item.field]: item.direction,
+      })) || [{createdAt: 'desc'}],
       take: request.pageSize || 10,
       skip: (request.page - 1) * (request.pageSize || 10),
       include: {
@@ -471,5 +470,131 @@ export class ProductsService {
         : 'Widget embedding verification failed',
       data: linkExists,
     } as RRResponse<boolean>;
+  }
+
+  async vote(userId: string, id: string) {
+    //check if the user has already voted for this product
+    const existingVote = await this.prismaService.productVote.findUnique({
+      where: {
+        userId_productId: {
+          userId: userId,
+          productId: id,
+        },
+      },
+    })
+    if (existingVote) {
+      this.logger.warn(`User ${userId} has already voted for product ${id}`);
+      throw new BadRequestException('You have already voted for this product');
+    }
+    // Create a new vote record
+    await this.prismaService.productVote.create({
+      data: {
+        userId: userId,
+        productId: id,
+      },
+    })
+    // Increment the vote count for the product
+    return this.prismaService.product.update({
+      where: {
+        id: id,
+      },
+      data: {
+        voteCount: {
+          increment: 1, // Increment the vote count
+        },
+        updatedAt: new Date(), // Update the timestamp
+      },
+    })
+  }
+
+  async unvote(userId: string, id: string) {
+    // Check if the user has voted for this product
+    const existingVote = await this.prismaService.productVote.findUnique({
+      where: {
+        userId_productId: {
+          userId: userId,
+          productId: id,
+        },
+      },
+    });
+    if (!existingVote) {
+      this.logger.warn(`User ${userId} has not voted for product ${id}`);
+      throw new BadRequestException('You have not voted for this product');
+    }
+    // Delete the vote record
+    await this.prismaService.productVote.delete({
+      where: {
+        userId_productId: {
+          userId: userId,
+          productId: id,
+        },
+      },
+    });
+    // Decrement the vote count for the product
+    return this.prismaService.product.update({
+      where: {
+        id: id,
+      },
+      data: {
+        voteCount: {
+          decrement: 1, // Decrement the vote count
+        },
+        updatedAt: new Date(), // Update the timestamp
+      },
+    });
+  }
+
+  async findToday(uid: string, request: FindAllRequest): Promise<PaginateResponse<ProductEntity>> {
+    const {page, pageSize} = request;
+    const whereCondition: any = {
+      status: 'approved',
+      // createdAt: {
+      //   gte: new Date(new Date().setHours(0, 0, 0, 0)), // Filter products created today
+      //   lte: new Date(new Date().setHours(23, 59, 59, 999)), // Filter products created today
+      // },
+    };
+    const total = await this.prismaService.product.count({
+      where: {
+        ...whereCondition,
+      },
+    });
+    const items = await this.prismaService.product.findMany({
+      where: {
+        ...whereCondition,
+      },
+      orderBy: [
+        {voteCount: 'desc'},
+        {createdAt: 'desc'},
+      ],
+      // 'voteCount': 'desc',
+      take: pageSize || 10,
+      skip: (page - 1) * (pageSize || 10),
+      select: {
+        id: true,
+        name: true,
+        slug: true,
+        icon: true,
+        tagline: true,
+        description: true,
+        voteCount: true,
+        productCategories: {
+          select: {
+            id: true,
+            name: true,
+            slug: true,
+          }
+        }
+      }
+    });
+
+    return {
+      items: items,
+      meta: {
+        page: page,
+        pageSize: pageSize || 10,
+        total: total,
+        pageCount: Math.ceil(total / (pageSize || 10)),
+      },
+    };
   }
 }

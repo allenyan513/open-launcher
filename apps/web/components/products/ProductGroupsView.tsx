@@ -104,10 +104,10 @@ async function fetchData(lang: string) {
       page: 1,
       pageSize: 12,
       status: ['approved'],
-      orderBy: {
+      orderBy: [{
         field: 'voteCount',
         direction: 'desc'
-      },
+      }],
       productCategorySlug: firstCategory?.slug || ''
     })
 

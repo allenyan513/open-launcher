@@ -7,12 +7,14 @@ import ProductUrlView from "@/components/products/ProductUrlView";
 import {Metadata} from "next";
 import FeaturedProductsView from "@/components/products/FeaturedProductsView";
 import {useTranslate} from "@/i18n/dictionaries";
-import {getStrapiMedia, formatMonthlyVisit, getFormatData2} from "@/utils";
+import {getStrapiMedia, formatMonthlyVisit, getFormatData2, generateAuthFetchOptions} from "@/utils";
 import {api} from "@repo/shared";
 import {notFound} from "next/navigation";
 import {Avatar, AvatarFallback, AvatarImage} from "@repo/ui/avatar";
 import {LinkDoFollow} from "@repo/ui/link-dofollow"
 import {websiteConfig} from "@/config/website";
+import {ProductVoteButton} from "@/modules/products/products-launches-item-vote-button";
+import getSession from "@/actions/getSession";
 
 
 export async function generateMetadata(props: {
@@ -52,10 +54,10 @@ export default async function ProductPage(props: {
   const {lang, slug} = await props.params
   const t = await useTranslate(lang)
   const product = await api.products.findOne(slug)
+  const session = await getSession()
   if (!product) {
     notFound()
   }
-
   const name = product.name;
   const tagline = product?.productContents?.find((content) => content.language === lang)?.tagline || product.tagline || '';
   const description = product?.productContents?.find((content) => content.language === lang)?.description || product.description || '';
@@ -119,11 +121,15 @@ export default async function ProductPage(props: {
               </h2>
             </div>
           </div>
-
           {/*  Actions*/}
           <div className="flex flex-row items-center gap-2 text-sm">
+            <ProductVoteButton
+              productId={product.id || ''}
+              voteCount={product.voteCount || 0}
+              isVoted={session?.productVotes?.some(vote => vote.productId === product.id) || false}
+            />
             <LinkDoFollow
-              className="rounded-md bg-white text-black px-3 py-2 inline-flex items-center gap-2 border border-gray-300 hover:bg-gray-100 transition-colors duration-300"
+              className="h-12 rounded-md bg-white text-black px-4 py-2 inline-flex items-center gap-2 border hover:bg-gray-100 transition-colors duration-300"
               href={product.url || '#'}
               isDoFollow={product.status === 'approved'}
               isExternal={true}

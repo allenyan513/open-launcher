@@ -1,14 +1,15 @@
-import React from 'react';
 import Link from 'next/link';
-import {ProductCategoryEntity, ProductEntity} from '@repo/shared/types';
-import {BsTag} from 'react-icons/bs';
+import {ProductEntity} from '@repo/shared/types';
+import {BsCaretUp, BsCaretUpFill, BsTag} from 'react-icons/bs';
 import {getStrapiMedia} from "@/utils";
+import {ProductVoteButton} from "@/modules/products/products-launches-item-vote-button";
 
 export function ProductListItemView(props: {
   index: number;
   product: ProductEntity;
+  isVoted: boolean;
 }) {
-  const {index, product} = props;
+  const {index, product , isVoted} = props;
   return (
     <Link
       href={`/products/${product.slug}`}
@@ -45,12 +46,14 @@ export function ProductListItemView(props: {
           </div>
         </div>
         <div className="flex flex-col items-center gap-2 text-sm">
-          {/*<span className="font-semibold text-black text-lg">*/}
-          {/*  {product.reviewRatingStr}*/}
-          {/*</span>*/}
-          {/*<StarRatingServer size={'sm'} value={product?.reviewRating || 0}/>*/}
-          {/*<span className="text-gray-500">{product.reviewCount} reviews</span>*/}
         </div>
+      </div>
+      <div>
+        <ProductVoteButton
+          productId={product.id || ''}
+          voteCount={product.voteCount || 0}
+          isVoted={isVoted}
+        />
       </div>
     </Link>
   );

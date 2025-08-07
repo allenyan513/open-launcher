@@ -23,6 +23,11 @@ export class UsersService {
         balance: true,
         avatarUrl: true,
         subscriptionTier: true,
+        productVotes: {
+          select: {
+            productId: true,
+          },
+        }
       },
     });
     return {

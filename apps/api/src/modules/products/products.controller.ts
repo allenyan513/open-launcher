@@ -55,6 +55,7 @@ export class ProductsController {
     const validatedRequest = findAllRequestSchema.parse(request);
     return this.productsService.findAll(null, validatedRequest);
   }
+
   @Get('findAllSlug')
   async findAllSlug() {
     return this.productsService.findAllSlug();
@@ -111,6 +112,36 @@ export class ProductsController {
     return this.productsService.findAll(
       jwt.userId,
       validatedRequest);
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Post(':id/vote')
+  async vote(
+    @Jwt() jwt: JwtPayload,
+    @Param('id') id: string,
+  ) {
+    return this.productsService.vote(jwt.userId, id);
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Post(':id/unvote')
+  async unvote(
+    @Jwt() jwt: JwtPayload,
+    @Param('id') id: string,
+  ) {
+    return this.productsService.unvote(jwt.userId, id);
+  }
+
+  @Post('today')
+  async findTody(@Body() request: any) {
+    const validatedRequest = findAllRequestSchema.parse(request);
+    return this.productsService.findToday(null, validatedRequest);
+  }
+
+  @Post('weekly')
+  async findWeekly(@Body() request: any) {
+    const validatedRequest = findAllRequestSchema.parse(request);
+    return this.productsService.findToday(null, validatedRequest);
   }
 
 

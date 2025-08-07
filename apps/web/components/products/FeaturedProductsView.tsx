@@ -12,10 +12,10 @@ export default async function FeaturedProductsView(props: {
     page: 1,
     pageSize: 10,
     status: ['approved'],
-    orderBy: {
+    orderBy: [{
       field: 'featured',
       direction: 'desc'
-    }
+    }]
   })
   //random
   featuredProducts.items.sort(() => Math.random() - 0.5);

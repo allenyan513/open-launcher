@@ -1,3 +1,6 @@
+import {cookies} from "next/headers";
+import {AuthFetchOptions} from "@repo/shared/api-client";
+
 export function getStrapiMedia(url: string | null | undefined): string {
   if (url == null) {
     return '';
@@ -26,7 +29,7 @@ export function formatMonthlyVisit(visit: number) {
 }
 
 export function getFormatData2(dateTime: string | undefined) {
-  if( !dateTime) {
+  if (!dateTime) {
     return '';
   }
   const options: Intl.DateTimeFormatOptions = {year: 'numeric', month: 'long', day: 'numeric'};
@@ -34,10 +37,19 @@ export function getFormatData2(dateTime: string | undefined) {
 }
 
 
-
 export function getLetterFromDate(date = new Date()) {
   const day = date.getDate(); // 获取当前日
   const offset = (day - 1) % 25; // 从0开始的偏移，确保在0到24之间循环
   return String.fromCharCode(97 + offset); // 97 是 'a' 的 ASCII 码
+}
+
+export async function generateAuthFetchOptions(): Promise<AuthFetchOptions> {
+  const cookieStore = await cookies();
+  const access_token = cookieStore.get('access_token')?.value;
+  return {
+    headers: {
+      'Authorization': `Bearer ${access_token}`
+    }
+  } as AuthFetchOptions;
 }
 

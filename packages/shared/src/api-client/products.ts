@@ -22,6 +22,8 @@ export const products = {
     authFetch(`/api/products/${id}`, 'GET'),
   findAllSlug: (): Promise<string[]> =>
     authFetch(`/api/products/findAllSlug`, 'GET'),
+  findToday: (request: FindAllRequest): Promise<PaginateResponse<ProductEntity>> =>
+    authFetch(`/api/products/today`, 'POST', request),
   create: (request: SimpleCreateProductRequest): Promise<ProductEntity> =>
     authFetch(`/api/products`, 'POST', request),
   submit: (request: SubmitProductRequest,): Promise<RRResponse<ProductEntity | CreateOneTimePaymentResponse>> =>
@@ -33,5 +35,11 @@ export const products = {
     authFetch(`/api/products/${id}`, 'PATCH', data),
   deleteOne: (id: string) =>
     authFetch(`/api/products/${id}`, 'DELETE', {}),
+
+  vote: (id: string): Promise<ProductEntity> =>
+    authFetch(`/api/products/${id}/vote`, 'POST'),
+  unvote: (id: string): Promise<ProductEntity> =>
+    authFetch(`/api/products/${id}/unvote`, 'POST'),
+
 
 };

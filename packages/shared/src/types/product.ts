@@ -107,10 +107,12 @@ export const findAllRequestSchema = z.object({
   pageSize: z.coerce.number().int().min(1).max(100).default(10).optional(),
   status: z.array(z.nativeEnum(ProductStatus)).optional(),
   search: z.string().optional(),
-  orderBy: z.object({
-    field: z.string().optional(),
-    direction: z.enum(['asc', 'desc']).optional(),
-  }).optional(),
+  orderBy: z.array(
+    z.object({
+      field: z.string().optional(),
+      direction: z.enum(['asc', 'desc']).optional(),
+    })
+  ).optional(),
   productCategorySlug: z.string().optional(),
   productCategoryId: z.string().optional(),
 });
@@ -141,3 +143,13 @@ export const productContentSchema = z.object({
 })
 
 export type ProductContentEntity = z.infer<typeof productContentSchema>;
+
+export const productVoteSchema = z.object({
+  id: z.string().min(1, 'Product Vote ID is required'),
+  userId: z.string().min(1, 'User ID is required'),
+  productId: z.string().min(1, 'Product ID is required'),
+  createdAt: z.date(),
+  updatedAt: z.date(),
+})
+
+export type ProductVoteEntity = z.infer<typeof productVoteSchema>;

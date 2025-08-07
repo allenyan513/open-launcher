@@ -1,4 +1,5 @@
-import { z } from 'zod';
+import {z} from 'zod';
+import {productSchema, productVoteSchema} from "./product";
 // import { Decimal } from '@prisma/client/runtime/library';
 
 export const SubscriptionTier = {
@@ -19,9 +20,10 @@ export const userEntitySchema = z.object({
     .refine((val) => !isNaN(Number(val)), {
       message: 'Balance must be a valid number',
     }),
-    // .transform((val) => new Decimal(val)),
   createdAt: z.date(),
   updatedAt: z.date(),
+  products: z.lazy(() => z.array(productSchema)).optional(),
+  productVotes: z.lazy(() => z.array(productVoteSchema)).optional(),
 });
 export type UserEntity = z.infer<typeof userEntitySchema>;
 

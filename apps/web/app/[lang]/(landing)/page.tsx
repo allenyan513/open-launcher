@@ -18,10 +18,7 @@ export default async function Page(props: {
   return (
     <div className='flex flex-col md:grid md:grid-cols-12 gap-8 pt-24 pb-12'>
       <div className='flex flex-col md:col-span-8'>
-        <ProductLaunchesPage
-          lang={lang}
-          title={'Top Products Launching Today'}
-        />
+        <ProductLaunchesPage lang={lang}/>
       </div>
       <FeaturedProductsView
         className={'md:col-span-4'}

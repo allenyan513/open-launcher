@@ -1,3 +1,5 @@
+import {AuthFetchOptions} from "./index";
+
 export class UnauthorizedError extends Error {
   constructor(message: string = 'Unauthorized') {
     super(message);
@@ -38,10 +40,7 @@ export async function authFetch(
   endpoint: string,
   method: 'GET' | 'POST' | 'DELETE' | 'PATCH',
   data: Record<string, any> = {},
-  options: {
-    headers?: HeadersInit,
-    timeout?: number,
-  } = {},
+  options: AuthFetchOptions = {},
 ) {
   const headers: HeadersInit = {
     'Content-Type': 'application/json',

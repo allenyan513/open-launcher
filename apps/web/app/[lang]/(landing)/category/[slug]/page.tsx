@@ -56,10 +56,10 @@ async function fetchStaticData(lang: string, slug: string) {
     page: 1,
     pageSize: 3,
     status: ['approved'],
-    orderBy: {
+    orderBy: [{
       field: 'createdAt',
       direction: 'desc',
-    },
+    }],
     productCategorySlug: slug,
   })
 
