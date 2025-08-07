@@ -1,0 +1,2 @@
+-- AlterTable
+ALTER TABLE "public"."Product" ADD COLUMN     "launchDate" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP;

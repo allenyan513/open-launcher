@@ -3,7 +3,6 @@
 import React, {use, useEffect, useState, useRef} from 'react';
 import {Button, buttonVariants} from '@repo/ui/button';
 import {
-  CreateProductRequest,
   SubmitProductRequest,
   submitProductSchema,
   CreateOneTimePaymentResponse,
@@ -27,6 +26,7 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from '@repo/ui/alert-dialog';
+import {DatePicker} from "@repo/ui/data-picker";
 
 const badgeEmbedCode = `
 <a href="{{endpointUrl}}/products/{{productIdOrSlug}}" target="_blank">
@@ -53,7 +53,7 @@ function getBadgeEmbedCode(
 function PaidSubmitOption(props: {
   form: any;
   loading: boolean;
-  onSubmit: (data: CreateProductRequest) => void;
+  onSubmit: (data: SubmitProductRequest) => void;
   isCheckDialogOpen: boolean;
   setIsCheckDialogOpen: (open: boolean) => void;
   currentBalance: string;
@@ -221,7 +221,7 @@ function FreeSubmitOption(props: {
       >
         <LoadingText
           isLoading={loading}
-                     loadingText={'Verifying...'}
+          loadingText={'Verifying...'}
           normalText={'Verify and Submit'}/>
       </Button>
     </div>
@@ -237,6 +237,7 @@ export function ProductsSubmitPlan(props: {
     resolver: zodResolver(submitProductSchema),
     defaultValues: {
       id: productId,
+      launchDate: new Date(),
       submitOption: 'free-submit',
     },
   });
@@ -246,26 +247,15 @@ export function ProductsSubmitPlan(props: {
   const [loading, setLoading] = useState<boolean>(false);
   const [isCheckDialogOpen, setIsCheckDialogOpen] = useState(false);
 
-  const handleUpdate = async () => {
+  const onSubmit = async () => {
     try {
-      setLoading(true);
       const values = form.getValues();
-      const response = await api.products.updateOne(productId, {
-        ...values,
-      }); // 你需要实现这个API
-      toast.success('Product updated successfully!');
-      setLoading(false);
-    } catch (error) {
-      setLoading(false);
-      toast.error('Failed to update product. Please try again.');
-    }
-  };
-
-  const onSubmit = async (data: CreateProductRequest) => {
-    try {
-      console.log('Submitting product with data:', data);
       setLoading(true);
-      const response = await api.products.submit(data);
+      const response = await api.products.submit({
+        id: values.id,
+        launchDate: values.launchDate,
+        submitOption: values.submitOption,
+      });
       if (response.code === 200) {
         setLoading(false);
         toast.success('Product Submitted Successfully!');
@@ -301,6 +291,7 @@ export function ProductsSubmitPlan(props: {
         if (product) {
           form.reset({
             id: product.id,
+            launchDate: product.launchDate || new Date(),
             submitOption: 'free-submit',
           });
         }
@@ -314,44 +305,65 @@ export function ProductsSubmitPlan(props: {
     <Form {...form}>
       <form
         onSubmit={(e) => {
-          console.log('form submit', form.getValues());
           e.preventDefault();
-          if (form.getValues('submitOption') === 'update') {
-            handleUpdate();
-          } else {
-            console.log('form submit hhh');
-            form.handleSubmit(onSubmit, onError)();
-          }
+          form.handleSubmit(onSubmit, onError)();
         }}
-        className="flex flex-col"
+        className="flex flex-col gap-4"
       >
-        {/*<div className="flex flex-row items-center justify-between mb-4 mt-8">*/}
-        {/*  <h2 className="text-lg font-semibold">Submit Options</h2>*/}
-        {/*</div>*/}
-        <FormLabel className="mb-2 text-md">
-          Submission Plan
-        </FormLabel>
-        <div className={'grid grid-cols-1 md:grid-cols-2 gap-4'}>
-          <FreeSubmitOption
-            form={form}
-            productId={productId}
-            loading={loading}
-          />
-          <PaidSubmitOption
-            form={form}
-            loading={loading}
-            onSubmit={onSubmit}
-            isCheckDialogOpen={isCheckDialogOpen}
-            setIsCheckDialogOpen={setIsCheckDialogOpen}
-            currentBalance={user?.balance?.toString() || '0'}
-          />
+        <FormField
+          control={form.control}
+          name={'launchDate'}
+          render={({field}) => (
+            <div>
+              <FormLabel className="mb-2 text-md">
+                Choose your launch date
+              </FormLabel>
+              <DatePicker
+                value={field.value}
+                onChange={field.onChange}
+                disabled={(date) => {
+                  // 获取当前时间的 UTC 日期（忽略时区影响）
+                  const now = new Date();
+                  const utcToday = new Date(Date.UTC(
+                    now.getUTCFullYear(),
+                    now.getUTCMonth(),
+                    now.getUTCDate()
+                  ));
+
+                  // 将要比较的日期也转换为 UTC 零点
+                  const target = new Date(Date.UTC(
+                    date.getUTCFullYear(),
+                    date.getUTCMonth(),
+                    date.getUTCDate()
+                  ));
+
+                  return target < utcToday;
+                }}
+              />
+            </div>
+          )}
+        />
+
+        <div>
+          <FormLabel className="mb-2 text-md">
+            Submission Plan
+          </FormLabel>
+          <div className={'grid grid-cols-1 md:grid-cols-2 gap-4'}>
+            <FreeSubmitOption
+              form={form}
+              productId={productId}
+              loading={loading}
+            />
+            <PaidSubmitOption
+              form={form}
+              loading={loading}
+              onSubmit={onSubmit}
+              isCheckDialogOpen={isCheckDialogOpen}
+              setIsCheckDialogOpen={setIsCheckDialogOpen}
+              currentBalance={user?.balance?.toString() || '0'}
+            />
+          </div>
         </div>
-        {/*<Link*/}
-        {/*  href={`/dashboard/products`}*/}
-        {/*  className="text-gray-500  hover:text-gray-600 hover:underline cursor-pointer underline"*/}
-        {/*>*/}
-        {/*  <p className="mt-4 text-sm">or do it later</p>*/}
-        {/*</Link>*/}
       </form>
     </Form>
   );

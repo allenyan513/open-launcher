@@ -3,19 +3,24 @@ import React, {use} from "react";
 import {DashboardHeader} from "@/components/dashboard/dashboard-header";
 import {DashboardRoot} from "@/components/dashboard/dashboard-root";
 import {DashboardContent} from "@/components/dashboard/dashboard-content";
-import {BsHeart, BsStar} from "react-icons/bs";
+import {BsHeart, BsStar,BsInfoCircle,BsPatchExclamation} from "react-icons/bs";
 import Link from "next/link";
 import {cn} from "@repo/ui/lib/utils";
 import {usePathname} from "next/navigation";
 
 const pageItems = [
   {
-    title: 'Info',
+    title: 'Main info',
     url: 'info',
-    icon: BsStar,
+    icon: BsInfoCircle,
   },
   {
-    title: 'Plan',
+    title: 'Extra info',
+    url: 'extra',
+    icon: BsPatchExclamation,
+  },
+  {
+    title: 'Submit',
     url: 'plan',
     icon: BsHeart,
   },

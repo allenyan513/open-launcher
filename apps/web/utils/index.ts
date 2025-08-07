@@ -33,6 +33,16 @@ export function getFormatData2(dateTime: string | undefined) {
   return new Date(dateTime).toLocaleDateString('en-US', options);
 }
 
+export function getFormatData3(date: Date | string | undefined) {
+  if (!date) {
+    return '';
+  }
+  if (typeof date === 'string') {
+    date = new Date(date);
+  }
+  const options: Intl.DateTimeFormatOptions = {year: 'numeric', month: 'long', day: 'numeric'};
+  return date.toLocaleDateString('en-US', options);
+}
 
 export function getLetterFromDate(date = new Date()) {
   const day = date.getDate(); // 获取当前日

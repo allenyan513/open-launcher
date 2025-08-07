@@ -14,14 +14,5 @@ export default async function Page(props: {
   }>
 }) {
   const {lang} = await props.params;
-  return (
-    <div className='flex flex-col md:grid md:grid-cols-12 gap-8 pt-24 pb-12'>
-      <div className='flex flex-col md:col-span-8'>
-        <ProductLaunchesPage lang={lang}/>
-      </div>
-      <FeaturedProductsView
-        className={'px-4 md:col-span-4'}
-        lang={lang}/>
-    </div>
-  );
+  return <ProductLaunchesPage lang={lang}/>
 }

@@ -62,6 +62,24 @@ export function columns(
       accessorKey: 'url',
       header: 'Link',
     },
+
+    {
+      accessorKey: 'createdAt',
+      header: 'Submitted At',
+      cell: ({row}) => {
+        const date = new Date(row.getValue('createdAt'));
+        return <span>{getFormatData2(date.toString())}</span>;
+      },
+    },
+
+    {
+      accessorKey: 'launchDate',
+      header: 'Launched At',
+      cell: ({row}) => {
+        const date = new Date(row.getValue('launchDate'));
+        return <span>{getFormatData2(date.toString())}</span>;
+      },
+    },
     {
       accessorKey: 'status',
       header: 'Status',
@@ -73,24 +91,6 @@ export function columns(
           </span>
         );
       }
-    },
-    {
-      accessorKey: 'createdAt',
-      header: ({column}) => {
-        return (
-          <Button
-            variant={'ghost'}
-            onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
-          >
-            Date
-            <ArrowUpDown className="h-4 w-4"/>
-          </Button>
-        );
-      },
-      cell: ({row}) => {
-        const date = new Date(row.getValue('createdAt'));
-        return <span>{getFormatData2(date.toString())}</span>;
-      },
     },
     {
       id: 'actions',

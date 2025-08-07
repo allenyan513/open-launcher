@@ -19,7 +19,7 @@ import {
   UpdateProductRequest,
   JwtPayload,
   SubmitProductRequest,
-  CreateProductRequest, SimpleCreateProductRequest
+  SimpleCreateProductRequest, findLaunchesRequestSchema
 } from '@repo/shared';
 import {Response} from 'express';
 
@@ -54,6 +54,12 @@ export class ProductsController {
   async findAll(@Body() request: any) {
     const validatedRequest = findAllRequestSchema.parse(request);
     return this.productsService.findAll(null, validatedRequest);
+  }
+
+  @Post('findLaunches')
+  async findLaunches(@Body() request: any) {
+    const validatedRequest = findLaunchesRequestSchema.parse(request);
+    return this.productsService.findLaunches(null, validatedRequest);
   }
 
   @Get('findAllSlug')
@@ -92,9 +98,9 @@ export class ProductsController {
   async update(
     @Jwt() jwt: JwtPayload,
     @Param('id') id: string,
-    @Body() updateReviewDto: UpdateProductRequest,
+    @Body() request: UpdateProductRequest,
   ) {
-    return this.productsService.update(jwt.userId, id, updateReviewDto);
+    return this.productsService.update(jwt.userId, id, request);
   }
 
   @UseGuards(JwtAuthGuard)
@@ -131,18 +137,5 @@ export class ProductsController {
   ) {
     return this.productsService.unvote(jwt.userId, id);
   }
-
-  @Post('today')
-  async findTody(@Body() request: any) {
-    const validatedRequest = findAllRequestSchema.parse(request);
-    return this.productsService.findToday(null, validatedRequest);
-  }
-
-  @Post('weekly')
-  async findWeekly(@Body() request: any) {
-    const validatedRequest = findAllRequestSchema.parse(request);
-    return this.productsService.findToday(null, validatedRequest);
-  }
-
 
 }

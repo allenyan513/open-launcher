@@ -120,12 +120,8 @@ model Product {
   useCase           String?
   howToUse          String?
   faq               String?
-  redditUrl         String?
-  twitterUrl        String?
-  facebookUrl       String?
-  instagramUrl      String?
-  youtubeUrl        String?
-  tiktokUrl         String?
+  socialLinks       String[]          @default([])
+  launchDate        DateTime          @default(now())
   createdAt         DateTime          @default(now())
   updatedAt         DateTime          @updatedAt
   user              User              @relation(fields: [userId], references: [id], onDelete: Cascade)

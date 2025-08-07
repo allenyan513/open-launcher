@@ -7,13 +7,14 @@ import { UserProvider } from '@/context/UserProvider';
 import ToasterContext from '@/context/ToastContext';
 import { SiteHeader } from '@/components/dashboard/site-header';
 import {
+  IconBrandProducthunt,
   IconCheckbox, IconClipboard,
   IconCode,
   IconDashboard,
   IconForbid2, IconHeart,
   IconHourglassEmpty,
-  IconList, IconSettings,
-  IconStar, IconTable
+  IconList, IconRocket, IconSettings,
+  IconStar, IconTable, IconUser
 } from '@tabler/icons-react';
 import { usePathname } from 'next/navigation';
 
@@ -40,18 +41,24 @@ export default function RootLayout(props: {
             lang={lang}
             title={'FF2050.AI'}
             items={[
-              // {
-              //   title: 'Overview',
-              //   url: `/${lang}/dashboard/overview`,
-              //   icon: IconDashboard,
-              //   active: path.includes('/overview'),
-              // },
+              {
+                title: 'Submit',
+                url: `/${lang}/dashboard/submit`,
+                icon: IconRocket,
+                active: path.includes('/submit'),
+              },
               {
                 title: 'Products',
                 url: `/${lang}/dashboard/products`,
-                icon: IconDashboard,
+                icon: IconBrandProducthunt,
                 active: path.includes('/products'),
               },
+              // {
+              //   title: 'Account',
+              //   url: `/${lang}/dashboard/account/profile`,
+              //   icon: IconUser,
+              //   active: path.includes('/account'),
+              // },
             ]}
           />
           <SidebarInset>

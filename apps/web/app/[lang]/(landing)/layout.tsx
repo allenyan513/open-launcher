@@ -15,7 +15,8 @@ export default async function RootLayout(props: {
         websiteLogo={'/img/favicon.ico'}
         websiteName={'FF2050.AI'}
         githubLink="https://github.com/allenyan513/open-launcher"
-        appLink={`${process.env.NEXT_PUBLIC_ENDPOINT_URL}/dashboard`}
+        appLink={`/${lang}/dashboard`}
+        submitLink={`/${lang}/submit`}
         items={[
           {title: 'Launches', href: `/${lang}/launches`},
           {title: 'Products', href: `/${lang}/products`},
