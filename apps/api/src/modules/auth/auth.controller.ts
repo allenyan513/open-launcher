@@ -38,10 +38,9 @@ export class AuthController {
       sameSite: 'lax',
       maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
     });
-
     const redirectParam = req.query.state as string;
     const redirectUrl = redirectParam
-      ? `${process.env.NEXT_PUBLIC_ENDPOINT_URL}/${redirectParam}`
+      ? `${process.env.NEXT_PUBLIC_ENDPOINT_URL}/${decodeURIComponent(redirectParam)}`
       : `${process.env.NEXT_PUBLIC_ENDPOINT_URL}/`;
     return res.redirect(redirectUrl);
   }
@@ -63,7 +62,7 @@ export class AuthController {
 
     const redirectParam = req.query.state as string;
     const redirectUrl = redirectParam
-      ? `${process.env.NEXT_PUBLIC_ENDPOINT_URL}/${redirectParam}`
+      ? `${process.env.NEXT_PUBLIC_ENDPOINT_URL}/${decodeURIComponent(redirectParam)}`
       : `${process.env.NEXT_PUBLIC_ENDPOINT_URL}/`;
 
     return res.redirect(redirectUrl);
@@ -89,7 +88,7 @@ export class AuthController {
     });
     const encodedRedirect = req.query.redirect as string;
     const redirectUrl = encodedRedirect
-      ? `${process.env.NEXT_PUBLIC_ENDPOINT_URL}/${encodedRedirect}`
+      ? `${process.env.NEXT_PUBLIC_ENDPOINT_URL}/${decodeURIComponent(encodedRedirect)}`
       : `${process.env.NEXT_PUBLIC_ENDPOINT_URL}/`;
 
     return res.redirect(redirectUrl);
@@ -107,7 +106,7 @@ export class AuthController {
     res.clearCookie('access_token');
     const encodedRedirect = req.query.redirect as string;
     const redirectUrl = encodedRedirect
-      ? `${process.env.NEXT_PUBLIC_ENDPOINT_URL}/${encodedRedirect}`
+      ? `${process.env.NEXT_PUBLIC_ENDPOINT_URL}/${decodeURIComponent(encodedRedirect)}`
       : `${process.env.NEXT_PUBLIC_ENDPOINT_URL}/`;
 
     return res.redirect(redirectUrl);

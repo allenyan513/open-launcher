@@ -12,10 +12,6 @@ const tabs = [
     href: '/dashboard/account/profile',
   },
   {
-    name: 'My Reviews',
-    href: '/dashboard/account/my-reviews',
-  },
-  {
     name: 'Billing',
     href: '/dashboard/account/billing',
   },

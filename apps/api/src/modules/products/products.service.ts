@@ -11,7 +11,7 @@ import {
   RRResponse,
   CreateOneTimePaymentResponse,
   hash,
-  SimpleCreateProductRequest,
+  SimpleCreateProductRequest, FindLaunchesRequest,
 } from '@repo/shared';
 import slugify from 'slugify';
 import {$Enums} from '@repo/database/generated/client';
@@ -201,6 +201,7 @@ export class ProductsService {
         },
         data: {
           status: 'approved',
+          launchDate: dto.launchDate || new Date(),
           featured: true,
           updatedAt: new Date(),
         },
@@ -256,6 +257,7 @@ export class ProductsService {
       },
       data: {
         status: 'approved',
+        launchDate: dto.launchDate || new Date(),
         updatedAt: new Date(),
       },
     });
@@ -393,22 +395,51 @@ export class ProductsService {
   }
 
   async update(uid: string, id: string, dto: UpdateProductRequest) {
+    const data: any = {
+      updatedAt: new Date(),
+    };
+    if (dto.icon) {
+      data.icon = dto.icon;
+    }
+    if (dto.screenshots) {
+      data.screenshots = dto.screenshots;
+    }
+    if (dto.tagline) {
+      data.tagline = dto.tagline;
+    }
+    if (dto.description) {
+      data.description = dto.description;
+    }
+    if (dto.productCategoryIds) {
+      data.productCategories = {
+        set: dto.productCategoryIds?.map((categoryId) => ({
+          id: categoryId,
+        }))
+      };
+    }
+    if (dto.longDescription) {
+      data.longDescription = dto.longDescription;
+    }
+    if (dto.features) {
+      data.features = dto.features;
+    }
+    if (dto.useCase) {
+      data.useCase = dto.useCase;
+    }
+    if (dto.howToUse) {
+      data.howToUse = dto.howToUse;
+    }
+    if (dto.faq) {
+      data.faq = dto.faq;
+    }
+    if (dto.socialLinks) {
+      data.socialLinks = dto.socialLinks;
+    }
     return this.prismaService.product.update({
       where: {
         id: id,
       },
-      data: {
-        icon: dto.icon,
-        screenshots: dto.screenshots || [],
-        tagline: dto.tagline,
-        description: dto.description,
-        productCategories: {
-          set: dto.productCategoryIds?.map((categoryId) => ({
-            id: categoryId,
-          }))
-        },
-        updatedAt: new Date(), // Update the timestamp
-      },
+      data: data,
     });
   }
 
@@ -544,14 +575,35 @@ export class ProductsService {
     });
   }
 
-  async findToday(uid: string, request: FindAllRequest): Promise<PaginateResponse<ProductEntity>> {
-    const {page, pageSize} = request;
+  async findLaunches(uid: string, request: FindLaunchesRequest): Promise<PaginateResponse<ProductEntity>> {
+    const {page, pageSize, launchesType} = request;
+    // launchesType can be 'today', 'week', or 'month'
+    const now = new Date();
+    const todayStart = new Date(now.setHours(0, 0, 0, 0)); // 今天 00:00:00
+    const endOfYesterday = new Date(todayStart.getTime() - 1); // 昨天 23:59:59.999
+    const startOf7DaysAgo = new Date(todayStart.getTime() - 7 * 24 * 60 * 60 * 1000); // 7 天前 00:00:00
+    const startOf30DaysAgo = new Date(todayStart.getTime() - 30 * 24 * 60 * 60 * 1000); // 30 天前 00:00:00
+
     const whereCondition: any = {
       status: 'approved',
-      // createdAt: {
-      //   gte: new Date(new Date().setHours(0, 0, 0, 0)), // Filter products created today
-      //   lte: new Date(new Date().setHours(23, 59, 59, 999)), // Filter products created today
-      // },
+      ...(launchesType === 'today' && {
+        launchDate: {
+          gte: todayStart,
+          lte: new Date(todayStart.getTime() + 24 * 60 * 60 * 1000 - 1), // 今天结束
+        },
+      }),
+      ...(launchesType === 'week' && {
+        launchDate: {
+          gte: startOf7DaysAgo,
+          lte: endOfYesterday,
+        },
+      }),
+      ...(launchesType === 'month' && {
+        launchDate: {
+          gte: startOf30DaysAgo,
+          lte: endOfYesterday,
+        },
+      }),
     };
     const total = await this.prismaService.product.count({
       where: {
@@ -564,9 +616,8 @@ export class ProductsService {
       },
       orderBy: [
         {voteCount: 'desc'},
-        {createdAt: 'desc'},
+        {launchDate: 'desc'},
       ],
-      // 'voteCount': 'desc',
       take: pageSize || 10,
       skip: (page - 1) * (pageSize || 10),
       select: {

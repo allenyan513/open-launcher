@@ -215,13 +215,6 @@ export default async function ProductPage(props: {
             <RichText data={{
               body: faq,
             }}/>
-            <div className='divider'/>
-            <ProductUrlView productName={product.name || ''} urlName={'Reddit'} url={product.redditUrl || ''}/>
-            <ProductUrlView productName={product.name || ''} urlName={'YouTube'} url={product.youtubeUrl || ''}/>
-            <ProductUrlView productName={product.name || ''} urlName={'Twitter'} url={product.twitterUrl || ''}/>
-            {/*<ProductUrlView productName={product.name} urlName={'Pricing'} url={product.pricingUrl}/>*/}
-            {/*<ProductUrlView productName={product.name} urlName={'Discord'} url={product.discordUrl}/>*/}
-            {/*<ProductUrlView productName={product.name} urlName={'LinkedIn'} url={product.linkedinUrl}/>*/}
           </div>
           {/*Alternatives*/}
           <h2 className='h2 my-8'>{`Alternative Of ${product.name}`}</h2>
@@ -232,86 +225,48 @@ export default async function ProductPage(props: {
 
       </div>
       <div className='md:col-span-3 flex flex-col gap-12'>
-        <div className={'text-sm text-gray-500 gap-4 flex flex-col'}>
-          <p>PUBLISHER</p>
-          <div className="flex flex-row gap-2 items-center">
-            <Avatar className="h-8 w-8 rounded-full grayscale">
-              <AvatarImage src={product.user?.avatarUrl} alt={product.user?.name}/>
-              <AvatarFallback className="rounded-lg">CN</AvatarFallback>
-            </Avatar>
-            <span className="text-gray-900">{product.user?.name}</span>
+        <div className='text-sm text-gray-500 gap-4 flex flex-col'>
+          <div className="flex flex-row gap-2 items-center ">
+            <p>PUBLISHER</p>
+            <hr className="border-gray-300 flex-1"/>
+            <div className="flex flex-row gap-2 items-center">
+              <Avatar className="h-6 w-6 rounded-full grayscale">
+                <AvatarImage src={product.user?.avatarUrl} alt={product.user?.name}/>
+                <AvatarFallback className="rounded-lg">CN</AvatarFallback>
+              </Avatar>
+              <span className="text-gray-900">{product.user?.name}</span>
+            </div>
           </div>
           <div className="flex flex-row gap-2 items-center ">
-            <span className="">LAUNCH DATE</span>
+            <p className="">LAUNCH DATE</p>
             <hr className="border-gray-300 flex-1"/>
-            <span className="text-gray-500 uppercase">
-            {getFormatData2(product?.createdAt?.toString())}
-          </span>
+            <span className="text-gray-500 uppercase">{getFormatData2(product?.launchDate?.toString())} </span>
+          </div>
+          <div className="flex flex-col gap-4">
+            <p className="uppercase">Social Links</p>
+            <div className='flex flex-row gap-2'>
+              {product.socialLinks && product.socialLinks.length > 0 && (
+                product.socialLinks.map((link, index) => (
+                  <Link
+                    key={index}
+                    href={link}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="w-5 h-5 rounded-full border border-gray-300"
+                  >
+                    <img
+                      src={`https://www.google.com/s2/favicons?domain=${link}`}
+                      alt={`${link}`}
+                      className="w-5 h-5 rounded-full object-cover"
+                    />
+                  </Link>
+                ))
+              )}
+            </div>
           </div>
         </div>
         <FeaturedProductsView lang={lang}/>
       </div>
     </div>
-
-    // <>
-    //   <div className='flex flex-col gap-8 pt-24 pb-12 px-4'>
-    //     <BreadCrumb data={breadCrumbData.data}/>
-    //     <div className='flex flex-row gap-2 items-center'>
-    //       {product.icon && (
-    //         <img
-    //           className='w-12 h-12 rounded object-cover aspect-video'
-    //           src={getStrapiMedia(product.icon)}
-    //           alt={product.name}/>
-    //       )}
-    //       <div className='flex flex-col'>
-    //         <h1 className="text-2xl font-semibold">{product.name}</h1>
-    //         <h2 className='text-gray-500 line-clamp-1'>{product.tagline}</h2>
-    //       </div>
-    //     </div>
-    //     <div className='flex flex-col lg:flex-row gap-8'>
-    //       <div className='w-full lg:w-1/3'>
-    //         <Link
-    //           href={product?.url || ''}
-    //           target='_blank'>
-    //           <img
-    //             className='rounded object-cover aspect-video shadow-sm hover:shadow-lg transition-shadow duration-300'
-    //             src={getStrapiMedia(product.screenshots?.[0] || '')}
-    //             alt={product.name}
-    //           />
-    //         </Link>
-    //       </div>
-    //       <div className='flex-1 flex flex-col gap-3 justify-start items-start'>
-    //         <Link
-    //           className=' inline-flex items-center bg-black text-white px-3 py-2 rounded gap-2 '
-    //           href={product.url || ''}
-    //           target='_blank'>
-    //           <span>{t('Visit')} {product.name}</span>
-    //           <BsBoxArrowUp/>
-    //         </Link>
-    //         <div className='flex flex-row items-center gap-4'>
-    //           <p className='w-36 font-semibold'>{t('AddedOn')}:</p>
-    //           <p className=''>{getFormatData2(product?.createdAt?.toString())}</p>
-    //         </div>
-    //
-    //         <div className='flex flex-row items-center gap-4'>
-    //           <p className='w-36 font-semibold'>{t('MonthlyVisitors')}:</p>
-    //           <p className=''>{formatMonthlyVisit(0)}</p>
-    //         </div>
-    //
-    //         <p className='w-32 font-semibold'>{t('Categories')}:</p>
-    //         <div className='flex flex-row flex-wrap gap-2'>
-    //           {product.productCategories && product.productCategories.map((category: any) => (
-    //             <Link
-    //               key={category.id}
-    //               href={`/${lang}/category/${category?.slug}`}
-    //               className='border border-gray-300 rounded px-3 py-1 text-sm hover:bg-gray-100 transition-colors duration-200'>
-    //               {category.name}
-    //             </Link>
-    //           ))}
-    //         </div>
-    //       </div>
-    //     </div>
-    //   </div>
-    // </>
   );
 }

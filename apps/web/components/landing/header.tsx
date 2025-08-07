@@ -24,6 +24,8 @@ interface NavProps {
   websiteName?: string;
   githubLink?: string;
   appLink?: string;
+  submitLink?: string;
+  dashboardLink?: string;
   items?: {
     title: string;
     href: string;
@@ -177,11 +179,19 @@ function SignInButton(props: { className?: string }) {
             <DropdownMenuItem
               className={'cursor-pointer'}
               onClick={() => {
-                router.push('/dashboard');
+                router.push('/dashboard/submit');
               }}
             >
-              Profile
+              Submit
             </DropdownMenuItem>
+            {/*<DropdownMenuItem*/}
+            {/*  className={'cursor-pointer'}*/}
+            {/*  onClick={() => {*/}
+            {/*    router.push('/dashboard/profile');*/}
+            {/*  }}*/}
+            {/*>*/}
+            {/*  Profile*/}
+            {/*</DropdownMenuItem>*/}
             <DropdownMenuItem
               className={'cursor-pointer'}
               onClick={() => {
@@ -244,7 +254,7 @@ export function Header(props: NavProps) {
             <BsGithub className="h-6 w-6"/>
           </Link>
           <Link
-            href={props.appLink || ''}
+            href={props.submitLink || ''}
             className={cn(
               buttonVariants({
                 variant: 'outline',

@@ -42,15 +42,45 @@ export const createProductSchema = z.object({
 });
 
 export type CreateProductRequest = z.infer<typeof createProductSchema>;
-export type UpdateProductRequest = Partial<CreateProductRequest>;
+
+export const updateProductSchema = z.object({
+  tagline: z
+    .string()
+    .min(1, 'Tagline is required')
+    .max(64, 'Tagline must be less than 64 characters')
+    .optional(),
+  description: z
+    .string()
+    .min(1, 'Description is required')
+    .max(260, 'Description must be less than 260 characters')
+    .optional(),
+  icon: z.string().url('Invalid URL').min(1, 'Icon URL is required'),
+  screenshots: z.array(z.string().url('Invalid URL')).optional(),
+  productCategoryIds: z.array(z.string()).optional(),
+  longDescription: z.string()
+    .max(500, 'Long description must be less than 500 characters')
+    .optional(),
+  features: z.string()
+    .max(500, 'Features must be less than 500 characters')
+    .optional(),
+  useCase: z.string()
+    .max(500, 'Use Cases must be less than 500 characters')
+    .optional(),
+  howToUse: z.string()
+    .max(500, 'How to use must be less than 500 characters')
+    .optional(),
+  faq: z.string().optional(),
+  socialLinks: z.array(z.string().optional()),
+  launchDate: z.date().optional(),
+});
+export type UpdateProductRequest = z.infer<typeof updateProductSchema>;
 
 export const submitProductSchema = z.object({
   id: z.string().min(1, 'Product ID is required'),
+  launchDate: z.date().optional(),
   submitOption: z.enum([
     'free-submit',
     'paid-submit',
-    'crawl-product-info',
-    'update',
   ]),
 });
 
@@ -88,12 +118,8 @@ export const productSchema = z.object({
   useCase: z.string().optional(),
   howToUse: z.string().optional(),
   faq: z.string().optional(),
-  redditUrl: z.string().url('Invalid URL').optional(),
-  twitterUrl: z.string().url('Invalid URL').optional(),
-  facebookUrl: z.string().url('Invalid URL').optional(),
-  instagramUrl: z.string().url('Invalid URL').optional(),
-  youtubeUrl: z.string().url('Invalid URL').optional(),
-  tiktokUrl: z.string().url('Invalid URL').optional(),
+  socialLinks: z.array(z.string().optional()).optional(),
+  launchDate: z.date().optional(),
   createdAt: z.date(),
   updatedAt: z.date(),
   user: z.any().optional(),
@@ -118,6 +144,14 @@ export const findAllRequestSchema = z.object({
 });
 
 export type FindAllRequest = z.infer<typeof findAllRequestSchema>;
+
+export const findLaunchesRequestSchema = z.object({
+  page: z.coerce.number().int().min(1).default(1).optional(),
+  pageSize: z.coerce.number().int().min(1).max(100).default(10).optional(),
+  launchesType: z.enum(['today', 'week', 'month']).optional(),
+});
+
+export type FindLaunchesRequest = z.infer<typeof findLaunchesRequestSchema>;
 
 export const crawlProductResponseSchema = z.object({
   title: z.string().min(1, 'Title is required'),

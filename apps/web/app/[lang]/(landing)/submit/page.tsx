@@ -1,13 +1,13 @@
 import FeaturedProductsView from "@/components/products/FeaturedProductsView";
 import {ProductLaunchesPage} from "@/modules/products/products-launches-page";
 import type {Metadata} from "next";
+import {ProductSubmitSEOPage} from "@/modules/products/products-submit-seo-page";
 
 export const metadata: Metadata = {
-  title: 'FF2050.AI - Find your next AI tool',
+  title: 'Free Submit your AI tools - FF2050.AI',
   description:
-    'Discover the best AI tools and websites. Explore categories, latest products, and top-rated AI solutions. Stay updated with the latest in AI technology.',
+    'Submit your AI tools for free on FF2050.AI. Get featured in our AI tools directory and reach a wider audience. Join the best AI community today!',
 };
-
 
 export default async function Page(props: {
   params: Promise<{
@@ -15,5 +15,5 @@ export default async function Page(props: {
   }>
 }) {
   const {lang} = await props.params;
-  return <ProductLaunchesPage lang={lang}/>
+  return <ProductSubmitSEOPage lang={lang}/>
 }

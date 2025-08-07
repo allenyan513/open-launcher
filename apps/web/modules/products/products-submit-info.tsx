@@ -79,9 +79,8 @@ export function ProductsSubmitInfo(props: {
       const response = await api.products.updateOne(productId, {
         ...values,
       });
-      toast.success('Product updated successfully!');
       setLoading(false);
-      router.push(`/dashboard/products/${productId}/plan`);
+      router.push(`/dashboard/products/${productId}/extra`);
     } catch (error) {
       setLoading(false);
       toast.error('Failed to update product. Please try again.');
@@ -295,7 +294,7 @@ export function ProductsSubmitInfo(props: {
             form.setValue('submitOption', 'update');
           }}
         >
-          Next Step: Select Submission Plan
+          Next
         </Button>
       </form>
     </Form>

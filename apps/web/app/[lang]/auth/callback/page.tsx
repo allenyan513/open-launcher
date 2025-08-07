@@ -15,15 +15,16 @@ export default function CallbackPage(props: {
 }) {
   const router = useRouter();
   const searchParams = useSearchParams();
-
   useEffect(() => {
-    const access_token = searchParams.get('access_token');
     const encodedRedirectUrl = searchParams.get('redirect');
+    console.log('encodedRedirectUrl', encodedRedirectUrl);
+
     const redirectUrl = encodedRedirectUrl
       ? decodeURIComponent(encodedRedirectUrl)
       : '/dashboard';
-    if (!access_token) return;
-    localStorage.setItem('access_token', access_token);
+
+    console.log('redirectUrl', redirectUrl);
+
     redirect(redirectUrl);
   }, [searchParams, router]);
 

@@ -63,7 +63,7 @@ export default async function ProductCategoriesPage(props: {
     <>
       <div className='flex flex-col w-full justify-center items-center gap-4 text-center pt-24 pb-8 px-4'>
         <h1 className='text-xl md:text-5xl font-bold'>{t("Find Best Products By Categories")}</h1>
-        <p>{t("Over {{countCategory}} categories to find Best websites and tools", {countCategory: countCategory})}</p>
+        <p>{t("Over {countCategory} categories to find Best websites and tools", {countCategory: countCategory})}</p>
       </div>
       <div className='grid grid-cols-12 w-full px-4'>
         <div className='col-span-3 sticky top-24 h-[calc(100vh-6rem)] w-64 overflow-y-auto'>
