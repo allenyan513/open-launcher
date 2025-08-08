@@ -1,21 +1,79 @@
 import { z } from 'zod';
 
-export const ProductCategoryGroup = {
-  workProductivity: 'Work & Productivity',
-  engineeringDevelopment: 'Engineering & Development',
-  designCreative: 'Design & Creative',
-  finance: 'Finance',
-  socialCommunity: 'Social & Community',
-  marketing_features: 'Marketing Features',
-  ai: 'AI',
-  healthFitness: 'Health & Fitness',
-  travel: 'Travel',
-  platforms: 'Platforms',
-  productAddOns: 'Product Add-ons',
-  web3: 'Web3',
-  physicalProducts: 'Physical Products',
-  ecommerce: 'Ecommerce',
-};
+export const PRODUCT_CATEGORY_GROUP = [
+  {
+    name: 'work-&-productivity',
+    text: 'Work & Productivity',
+  },
+  {
+    name: 'engineering-&-development',
+    text: 'Engineering & Development',
+  },
+  {
+    name: 'design-&-creative',
+    text: 'Design & Creative',
+  },
+  {
+    name: 'finance',
+    text: 'Finance',
+  },
+  {
+    name: 'social-&-community',
+    text: 'Social & Community',
+  },
+  {
+    name: 'marketing-&-sales',
+    text: 'Marketing & Sales',
+  },
+  {
+    name: 'ai',
+    text: 'AI',
+  },
+  {
+    name: 'health-&-fitness',
+    text: 'Health & Fitness',
+  },
+  {
+    name: 'travel',
+    text: 'Travel',
+  },
+  {
+    name: 'platforms',
+    text: 'Platforms',
+  },
+  {
+    name: 'product-add-ons',
+    text: 'Product Add-ons',
+  },
+  {
+    name: 'web3',
+    text: 'Web3',
+  },
+  {
+    name: 'physical-products',
+    text: 'Physical Products',
+  },
+  {
+    name: 'ecommerce',
+    text: 'Ecommerce',
+  },
+  {
+    name: 'other',
+    text: 'Other',
+  }
+]
+
+export const productCategoryTree = z.object({
+  name: z.string(),
+  text: z.string(),
+  children: z.array(z.object({
+    name: z.string(),
+    text: z.string(),
+  })).optional(),
+})
+
+export type ProductCategoryTree = z.infer<typeof productCategoryTree>;
+
 
 export const productCategorySchema = z.object({
   id: z.string().min(1, 'Product ID is required'),

@@ -5,9 +5,12 @@ import FeaturedProductsView from "@/components/products/FeaturedProductsView";
 import Hero from "@/components/products/Hero";
 import ProductTagsView from "@/components/products/ProductTagsView";
 import ProductGroupsView from "@/components/products/ProductGroupsView";
-import {api} from "@repo/shared";
+import {api, PRODUCT_CATEGORY_GROUP} from "@repo/shared";
 import {useTranslate} from "@/i18n/dictionaries";
 import {i18n} from "@/config/i18n-config";
+import ProductGroupsViewV2 from "@/components/products/ProductGroupsViewV2";
+import Link from "next/link";
+import {notFound} from "next/navigation";
 
 // export const revalidate = 86400;
 
@@ -69,30 +72,54 @@ export default async function ProductsPage(props: {
   }>
 }) {
   const {lang} = await props.params;
-  const staticData = await fetchStaticData(lang)
+  const t = await useTranslate(lang);
+  const data = await api.products.findProducts()
+  if (!data) {
+    notFound()
+  }
   return (
     <>
       <Hero lang={lang}/>
-      <div className='flex flex-col lg:flex-row gap-8 py-8 px-4 '>
-        <div className='flex-1 flex flex-col gap-8'>
-          <ProductTagsView
-            activeTag={"Today"}
-            lang={lang}
-          />
-          <div className='flex flex-col gap-4'>
-            <ProductListView
-              data={staticData.todayProducts.slice(0, 8)}
-              lang={lang}/>
-            <ProductCompatListView
-              data={staticData.todayProducts.slice(8)}
-              lang={lang}
-            />
-          </div>
-          <ProductGroupsView lang={lang}/>
+      <div className='grid grid-cols-12 w-full px-4'>
+        <div className='col-span-3 sticky top-24 h-[calc(100vh-6rem)] w-64 overflow-y-auto'>
+          {PRODUCT_CATEGORY_GROUP.map((group) => (
+            <ul key={group.name} className='flex flex-col gap-2'>
+              <li className='mb-4'>
+                <Link
+                  href={`#${group.name}`}>
+                  {t(group.text || '')}
+                </Link>
+              </li>
+            </ul>
+          ))}
         </div>
-        <FeaturedProductsView
-          className={'w-full lg:w-1/5'}
-          lang={lang}/>
+        <div className="col-span-9 flex flex-col gap-8">
+          <ProductGroupsViewV2 lang={lang}/>
+          {PRODUCT_CATEGORY_GROUP.map((item) => (
+            <div key={item.name} className='flex flex-col gap-4'>
+              <h2
+                id={item.name}
+                className='text-3xl font-semibold flex flex-row gap-2 items-center'>
+                {t(item.text)}
+              </h2>
+              {data?.[item.name]?.map((product) => (
+                <div
+                  className='flex flex-row items-start gap-1'
+                  key={product.id}>
+                  <Link
+                    href={`/${lang}/products/${product.slug}`}
+                    className={'text-blue-500 line-clamp-1'}
+                  >
+                    {/* max 40 chars*/}
+                    {product.name && product.name.length > 40 ? product.name.slice(0, 40) + '...' : product.name}
+                  </Link>
+                  <p>-</p>
+                  <p className='flex-1 text-gray-500 line-clamp-1 overflow-x-hidden'>{product.tagline}</p>
+                </div>
+              ))}
+            </div>
+          ))}
+        </div>
       </div>
     </>
   );

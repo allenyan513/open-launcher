@@ -1,6 +1,6 @@
 import ProductCompatListView from "@/components/products/ProductCompactListView";
 import {useTranslate} from "@/i18n/dictionaries";
-import {PRODUCT_CATEGORY_GROUP} from "@/config/groupConfig";
+import {PRODUCT_CATEGORY_GROUP} from "@repo/shared/types";
 import Link from "next/link";
 
 import {
