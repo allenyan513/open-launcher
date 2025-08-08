@@ -37,6 +37,11 @@ export class ProductCategoriesController {
     return this.productCategoriesService.findAll();
   }
 
+  @Get('findTree')
+  async findTree() {
+    return this.productCategoriesService.findTree();
+  }
+
   @Get(':id')
   async findOne(@Param('id') id: string) {
     return this.productCategoriesService.findOne(id);

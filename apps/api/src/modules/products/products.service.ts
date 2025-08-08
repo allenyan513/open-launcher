@@ -25,6 +25,7 @@ import ReactDOMServer from 'react-dom/server';
 import {BadgeSvg} from './badge.svg';
 import * as React from 'react';
 import * as cheerio from 'cheerio';
+import {ProductCategoriesService} from "@src/modules/product-categories/product-categories.service";
 
 @Injectable()
 export class ProductsService {
@@ -35,6 +36,7 @@ export class ProductsService {
     private orderService: OrdersService,
     private browserlessService: BrowserlessService,
     private s3Service: S3Service,
+    private productCategoriesService: ProductCategoriesService,
   ) {
   }
 
@@ -647,5 +649,51 @@ export class ProductsService {
         pageCount: Math.ceil(total / (pageSize || 10)),
       },
     };
+  }
+
+  /**
+   * 一次性渲染所有产品, 主要用于生成静态页面
+   * 1. 根据PRODUCT_CATEGORY 循环查询每个分类下的前100个产品
+   *
+   */
+  async findProducts(): Promise<Record<string, ProductEntity[]>> {
+    this.logger.debug('Fetching all products by category');
+    const results: Record<string, ProductEntity[]> = {};
+    const tree = await this.productCategoriesService.findTree();
+    for (const category of tree) {
+      const ids = await this.prismaService.productCategory.findMany({
+        where: {
+          group: category.name,
+        },
+        select: {
+          id: true,
+        },
+      })
+      const products = await this.prismaService.product.findMany({
+        where: {
+          productCategories: {
+            some: {
+              id: {
+                in: ids.map(item => item.id),
+              }
+            }
+          }
+        },
+        orderBy: {
+          voteCount: 'desc',
+        },
+        select: {
+          id: true,
+          name: true,
+          slug: true,
+          url: true,
+          tagline: true,
+          voteCount: true,
+        },
+        take: 100,
+      })
+      results[category.name] = products;
+    }
+    return results;
   }
 }

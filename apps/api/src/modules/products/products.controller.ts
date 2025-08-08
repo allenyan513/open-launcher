@@ -62,6 +62,11 @@ export class ProductsController {
     return this.productsService.findLaunches(null, validatedRequest);
   }
 
+  @Get('findProducts')
+  async findProducts(){
+    return this.productsService.findProducts();
+  }
+
   @Get('findAllSlug')
   async findAllSlug() {
     return this.productsService.findAllSlug();

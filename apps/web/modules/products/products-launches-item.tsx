@@ -5,14 +5,15 @@ import {getStrapiMedia} from "@/utils";
 import {ProductVoteButton} from "@/modules/products/products-launches-item-vote-button";
 
 export function ProductListItemView(props: {
+  lang: string
   index: number;
   product: ProductEntity;
   isVoted: boolean;
 }) {
-  const {index, product , isVoted} = props;
+  const {lang,index, product , isVoted} = props;
   return (
     <Link
-      href={`/products/${product.slug}`}
+      href={`/${lang}/products/${product.slug}`}
       className="w-full flex flex-row flex-grow gap-4 p-4 hover:bg-gray-50 transition-colors duration-200 cursor-pointer"
     >
       {product.icon ? (

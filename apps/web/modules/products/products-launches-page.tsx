@@ -38,6 +38,7 @@ export async function ProductLaunchesPage(props: {
           {todayProducts?.items?.map((product, index) => (
             <ProductListItemView
               key={product.id}
+              lang={lang}
               index={index}
               product={product}
               isVoted={session?.productVotes?.some(vote => vote.productId === product.id) || false}
@@ -54,6 +55,7 @@ export async function ProductLaunchesPage(props: {
           {weekProducts?.items?.map((product, index) => (
             <ProductListItemView
               key={product.id}
+              lang={lang}
               index={index}
               product={product}
               isVoted={session?.productVotes?.some(vote => vote.productId === product.id) || false}
@@ -70,6 +72,7 @@ export async function ProductLaunchesPage(props: {
           {monthProducts?.items?.map((product, index) => (
             <ProductListItemView
               key={product.id}
+              lang={lang}
               index={index}
               product={product}
               isVoted={session?.productVotes?.some(vote => vote.productId === product.id) || false}
