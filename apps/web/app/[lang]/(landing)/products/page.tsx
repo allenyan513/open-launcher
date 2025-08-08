@@ -1,18 +1,10 @@
 import {Metadata} from "next";
-import ProductListView from "@/components/products/ProductListView";
-import ProductCompatListView from "@/components/products/ProductCompactListView";
-import FeaturedProductsView from "@/components/products/FeaturedProductsView";
 import Hero from "@/components/products/Hero";
-import ProductTagsView from "@/components/products/ProductTagsView";
-import ProductGroupsView from "@/components/products/ProductGroupsView";
 import {api, PRODUCT_CATEGORY_GROUP} from "@repo/shared";
 import {useTranslate} from "@/i18n/dictionaries";
 import {i18n} from "@/config/i18n-config";
-import ProductGroupsViewV2 from "@/components/products/ProductGroupsViewV2";
 import Link from "next/link";
 import {notFound} from "next/navigation";
-
-// export const revalidate = 86400;
 
 async function fetchStaticData(lang: string) {
   const t = await useTranslate(lang);
@@ -33,7 +25,7 @@ async function fetchStaticData(lang: string) {
   })
   return {
     title: t("Discover The Best AI Websites & Tools"),
-    description: t("{{key0}} AIs and {{key1}} categories in the best AI tools directory. AI tools list & GPTs store are updated daily by ChatGPT.", {
+    description: t("{key0} AIs and {key1} categories in the best AI tools directory. AI tools list & GPTs store are updated daily by ChatGPT.", {
       key0: latestProducts.meta.total.toString() || '0',
       key1: productCategories.meta.total.toString() || '0',
     }),
@@ -94,7 +86,6 @@ export default async function ProductsPage(props: {
           ))}
         </div>
         <div className="col-span-9 flex flex-col gap-8">
-          <ProductGroupsViewV2 lang={lang}/>
           {PRODUCT_CATEGORY_GROUP.map((item) => (
             <div key={item.name} className='flex flex-col gap-4'>
               <h2
