@@ -2,7 +2,6 @@ import Link from "next/link";
 import RichText from "@/components/products/RichText";
 import BreadCrumb, {BreadCrumbProps} from "@/components/products/BreadCrumb";
 import ProductListView from "@/components/products/ProductListView";
-import ProductUrlView from "@/components/products/ProductUrlView";
 import {Metadata} from "next";
 import FeaturedProductsView from "@/components/products/FeaturedProductsView";
 import {useTranslate} from "@/i18n/dictionaries";
@@ -15,6 +14,21 @@ import {websiteConfig} from "@/config/website";
 import {ProductVoteButton} from "@/modules/products/products-launches-item-vote-button";
 import getSession from "@/actions/getSession";
 
+function ProductInformationItem(props: { title: string, content: string }) {
+  const {title, content} = props
+  if (!content) {
+    return null
+  }
+  return (
+    <>
+      <h2 className='font-semibold'>{title}</h2>
+      <RichText data={{
+        body: content,
+      }}/>
+      <div className='border-t border-gray-300 my-2'></div>
+    </>
+  )
+}
 
 export async function generateMetadata(props: {
   params: Promise<{
@@ -183,41 +197,38 @@ export default async function ProductPage(props: {
           </div>
         )}
 
+        {/*Information*/}
+        <div className='flex flex-col gap-2'>
+          {!longDescription && !howToUse && !features && !useCase && !faq ? (
+            <p className='text-gray-500'>No additional information available for this product.</p>
+          ):
+            <p className='text-xl font-semibold mb-2'>{product.name} Product Information</p>
+          }
+          <ProductInformationItem
+            title={`What is ${product.name} `}
+            content={longDescription}
+          />
+          <ProductInformationItem
+            title={`How to use ${product.name}`}
+            content={howToUse}
+          />
+          <ProductInformationItem
+            title={`Core features of ${product.name}`}
+            content={features}
+          />
+          <ProductInformationItem
+            title={`Use Cases of ${product.name}`}
+            content={useCase}
+          />
+          <ProductInformationItem
+            title={`FAQ from ${product.name}`}
+            content={faq}
+          />
+        </div>
+
+        {/*Alternatives*/}
         <div>
-          <p className='h2'>{product.name} {t('ProductInformation')}</p>
-          <div className='flex flex-col rounded border border-gray-300 px-5 py-4 gap-2 bg-white'>
-            <h2 className='h3'>{`What is ${product.name}`}</h2>
-            <RichText data={{
-              body: longDescription,
-            }}/>
-            <div className='divider'/>
-
-            <h2 className='h3'>{`How to use ${product.name}`}</h2>
-            <RichText data={{
-              body: howToUse,
-            }}/>
-            <div className='divider'/>
-
-            <h2 className='h3'>{`Core features of ${product.name}`}</h2>
-            <RichText data={{
-              body: features,
-            }}/>
-            <div className='divider'/>
-
-            {/*Use Cases*/}
-            <h2 className='h3'>{`Use Cases of ${product.name}`}</h2>
-            <RichText data={{
-              body: useCase,
-            }}/>
-            <div className='divider'/>
-            {/*FAQs*/}
-            <h2 className='h3'>{`FAQ from ${product.name}`}</h2>
-            <RichText data={{
-              body: faq,
-            }}/>
-          </div>
-          {/*Alternatives*/}
-          <h2 className='h2 my-8'>{`Alternative Of ${product.name}`}</h2>
+          <h2 className='text-xl font-semibold mb-4'>{`Alternative Of ${product.name}`}</h2>
           <ProductListView
             lang={lang}
             data={relativeProducts?.items}/>
