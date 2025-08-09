@@ -66,14 +66,17 @@ export const updateProductSchema = z.object({
   longDescription: z.string()
     .max(500, 'Long description must be less than 500 characters')
     .optional(),
+  howItWorks: z.string()
+    .max(500, 'How it works must be less than 500 characters')
+    .optional(),
+  howToUse: z.string()
+    .max(500, 'How to use must be less than 500 characters')
+    .optional(),
   features: z.string()
     .max(500, 'Features must be less than 500 characters')
     .optional(),
   useCase: z.string()
     .max(500, 'Use Cases must be less than 500 characters')
-    .optional(),
-  howToUse: z.string()
-    .max(500, 'How to use must be less than 500 characters')
     .optional(),
   faq: z.string().optional(),
   socialLinks: z.array(z.string().optional()),
@@ -121,9 +124,10 @@ export const productSchema = z.object({
   voteCount: z.coerce.number().int().default(0),
   productCategories: z.lazy(() => z.array(productCategorySchema)).optional(),
   longDescription: z.string().optional(),
+  howItWorks: z.string().optional(),
+  howToUse: z.string().optional(),
   features: z.string().optional(),
   useCase: z.string().optional(),
-  howToUse: z.string().optional(),
   faq: z.string().optional(),
   socialLinks: z.array(z.string().optional()).optional(),
   launchDate: z.date().optional(),
@@ -175,9 +179,10 @@ export const productContentSchema = z.object({
   tagline: z.string().optional(),
   description: z.string().optional(),
   longDescription: z.string().optional(),
+  howItWorks: z.string().optional(),
+  howToUse: z.string().optional(),
   features: z.string().optional(),
   useCase: z.string().optional(),
-  howToUse: z.string().optional(),
   faq: z.string().optional(),
   createdAt: z.date(),
   updatedAt: z.date(),

@@ -1,6 +1,7 @@
 'use client';
 import React, {use, useEffect, useState} from 'react';
 import {
+  ProductEntity,
   UpdateProductRequest, updateProductSchema
 } from '@repo/shared/types';
 import {zodResolver} from '@hookform/resolvers/zod';
@@ -27,13 +28,15 @@ export function ProductsSubmitExtraInfo(props: {
   const {lang, productId} = props;
   const router = useRouter();
   const [loading, setLoading] = useState<boolean>(false);
+  const [product, setProduct] = useState<ProductEntity | undefined>(undefined);
   const form = useForm<UpdateProductRequest>({
     resolver: zodResolver(updateProductSchema),
     defaultValues: {
       longDescription: '',
+      howItWorks: '',
+      howToUse: '',
       features: '',
       useCase: '',
-      howToUse: '',
       faq: '',
       socialLinks: [],
     },
@@ -47,11 +50,13 @@ export function ProductsSubmitExtraInfo(props: {
       .findOne(productId)
       .then((product) => {
         if (product) {
+          setProduct(product);
           form.reset({
             longDescription: product.longDescription || '',
+            howItWorks: product.howItWorks || '',
+            howToUse: product.howToUse || '',
             features: product.features || '',
             useCase: product.useCase || '',
-            howToUse: product.howToUse || '',
             faq: product.faq || '',
             socialLinks: product.socialLinks || [],
           });
@@ -118,7 +123,48 @@ export function ProductsSubmitExtraInfo(props: {
             <div>
               <FormLabel className="mb-2 text-md justify-between items-center">
                 <div className="flex  flex-row items-center gap-2">
-                   <span>What is your product about?</span> <ProductsSubmitI18N/>
+                  <span>What is {product?.name}</span> <ProductsSubmitI18N/>
+                </div>
+                <p className="text-sm text-gray-400">
+                  {field.value ? field.value.length : 0}/500
+                </p>
+              </FormLabel>
+              <FormControl>
+                <Textarea className='h-32' {...field} />
+              </FormControl>
+              <FormMessage/>
+            </div>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name={'howItWorks'}
+          render={({field}) => (
+            <div>
+              <FormLabel className="mb-2 text-md justify-between items-center">
+                <div className="flex  flex-row items-center gap-2">
+                  <span>How {product?.name} Works</span> <ProductsSubmitI18N/>
+                </div>
+                <p className="text-sm text-gray-400">
+                  {field.value ? field.value.length : 0}/500
+                </p>
+              </FormLabel>
+              <FormControl>
+                <Textarea className='h-32' {...field} />
+              </FormControl>
+              <FormMessage/>
+            </div>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name="howToUse"
+          render={({field}) => (
+            <div>
+              <FormLabel className="mb-2 text-md justify-between items-center">
+                <div className="flex  flex-row items-center gap-2">
+                  <span>How to Use {product?.name}</span>
+                  <ProductsSubmitI18N/>
                 </div>
                 <p className="text-sm text-gray-400">
                   {field.value ? field.value.length : 0}/500
@@ -138,7 +184,7 @@ export function ProductsSubmitExtraInfo(props: {
             <div>
               <FormLabel className="mb-2 text-md justify-between items-center">
                 <div className="flex  flex-row items-center gap-2">
-                  <span>What are the key features of your product?</span>
+                  <span>Core Features of {product?.name}</span>
                   <ProductsSubmitI18N/>
                 </div>
                 <p className="text-sm text-gray-400">
@@ -159,28 +205,7 @@ export function ProductsSubmitExtraInfo(props: {
             <div>
               <FormLabel className="mb-2 text-md justify-between items-center">
                 <div className="flex  flex-row items-center gap-2">
-                  <span>What is the primary use case of your product?</span>
-                  <ProductsSubmitI18N/>
-                </div>
-                <p className="text-sm text-gray-400">
-                  {field.value ? field.value.length : 0}/500
-                </p>
-              </FormLabel>
-              <FormControl>
-                <Textarea className='h-32' {...field} />
-              </FormControl>
-              <FormMessage/>
-            </div>
-          )}
-        />
-        <FormField
-          control={form.control}
-          name="howToUse"
-          render={({field}) => (
-            <div>
-              <FormLabel className="mb-2 text-md justify-between items-center">
-                <div className="flex  flex-row items-center gap-2">
-                  <span>What are the steps to use your product?</span>
+                  <span>Use Case of {product?.name}</span>
                   <ProductsSubmitI18N/>
                 </div>
                 <p className="text-sm text-gray-400">
@@ -201,7 +226,7 @@ export function ProductsSubmitExtraInfo(props: {
             <div>
               <FormLabel className="mb-2 text-md justify-between items-center">
                 <div className="flex  flex-row items-center gap-2">
-                  <span>Any frequently asked questions about your product?</span>
+                  <span>Frequently Asked Questions</span>
                   <ProductsSubmitI18N/>
                 </div>
                 <p className="text-sm text-gray-400">

@@ -117,9 +117,10 @@ model Product {
   tagline           String            @default("")
   description       String            @default("")
   longDescription   String?
+  howItWorks        String?
+  howToUse          String?
   features          String?
   useCase           String?
-  howToUse          String?
   faq               String?
   socialLinks       String[]          @default([])
   launchDate        DateTime          @default(now())
@@ -150,9 +151,10 @@ model ProductContent {
   tagline         String?
   description     String?
   longDescription String?
+  howItWorks      String?
+  howToUse        String?
   features        String?
   useCase         String?
-  howToUse        String?
   faq             String?
   createdAt       DateTime @default(now())
   updatedAt       DateTime @updatedAt

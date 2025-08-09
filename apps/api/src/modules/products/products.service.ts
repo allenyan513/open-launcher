@@ -511,14 +511,17 @@ export class ProductsService {
     if (dto.longDescription) {
       data.longDescription = dto.longDescription;
     }
+    if (dto.howItWorks){
+      data.howItWorks = dto.howItWorks;
+    }
+    if (dto.howToUse) {
+      data.howToUse = dto.howToUse;
+    }
     if (dto.features) {
       data.features = dto.features;
     }
     if (dto.useCase) {
       data.useCase = dto.useCase;
-    }
-    if (dto.howToUse) {
-      data.howToUse = dto.howToUse;
     }
     if (dto.faq) {
       data.faq = dto.faq;

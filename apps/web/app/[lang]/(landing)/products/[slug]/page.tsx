@@ -24,7 +24,7 @@ function ProductInformationItem(props: { title: string, content: string }) {
   }
   return (
     <>
-      <h2 className='font-semibold'>{title}</h2>
+      <h2 className='text-xl font-semibold'>{title}</h2>
       <div className='rich-text'>
         <Markdown
           children={content}
@@ -85,9 +85,10 @@ export default async function ProductPage(props: {
   const tagline = product?.productContents?.find((content) => content.language === lang)?.tagline || product.tagline || '';
   const description = product?.productContents?.find((content) => content.language === lang)?.description || product.description || '';
   const longDescription = product?.productContents?.find((content) => content.language === lang)?.longDescription || product.longDescription || '';
+  const howItWorks = product?.productContents?.find((content) => content.language === lang)?.howItWorks || product.howItWorks || '';
+  const howToUse = product?.productContents?.find((content) => content.language === lang)?.howToUse || product.howToUse || '';
   const features = product?.productContents?.find((content) => content.language === lang)?.features || product.features || '';
   const useCase = product?.productContents?.find((content) => content.language === lang)?.useCase || product.useCase || '';
-  const howToUse = product?.productContents?.find((content) => content.language === lang)?.howToUse || product.howToUse || '';
   const faq = product?.productContents?.find((content) => content.language === lang)?.faq || product.faq || '';
 
 
@@ -203,21 +204,25 @@ export default async function ProductPage(props: {
 
         {/*Information*/}
         <div className='flex flex-col gap-2'>
-          {!longDescription && !howToUse && !features && !useCase && !faq ? (
-              <p className='text-gray-500'>No additional information available for this product.</p>
-            ) :
-            <p className='text-xl font-semibold mb-2'>{product.name} Product Information</p>
-          }
+          {/*{!longDescription && !howToUse && !features && !useCase && !faq ? (*/}
+          {/*    <p className='text-gray-500'>No additional information available for this product.</p>*/}
+          {/*  ) :*/}
+          {/*  <p className='text-xl font-semibold mb-2'>{product.name} Product Information</p>*/}
+          {/*}*/}
           <ProductInformationItem
-            title={`What is ${product.name} `}
+            title={`What is ${product.name}`}
             content={longDescription}
           />
           <ProductInformationItem
-            title={`How to use ${product.name}`}
+            title={`How ${product.name} Works`}
+            content={howItWorks}
+          />
+          <ProductInformationItem
+            title={`How to Use ${product.name}`}
             content={howToUse}
           />
           <ProductInformationItem
-            title={`Core features of ${product.name}`}
+            title={`Core Features of ${product.name}`}
             content={features}
           />
           <ProductInformationItem
@@ -232,7 +237,7 @@ export default async function ProductPage(props: {
 
         {/*Alternatives*/}
         <div>
-          <h2 className='text-xl font-semibold mb-4'>{`Alternative Of ${product.name}`}</h2>
+          <h2 className='text-xl font-semibold mb-4'>{`Alternatives of ${product.name}`}</h2>
           <ProductListView
             lang={lang}
             data={relativeProducts?.items}/>
