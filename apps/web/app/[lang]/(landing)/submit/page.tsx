@@ -1,5 +1,3 @@
-import FeaturedProductsView from "@/components/products/FeaturedProductsView";
-import {ProductLaunchesPage} from "@/modules/products/products-launches-page";
 import type {Metadata} from "next";
 import {ProductSubmitSEOPage} from "@/modules/products/products-submit-seo-page";
 

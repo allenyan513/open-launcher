@@ -1,6 +1,13 @@
 import {z} from 'zod';
 import {productCategorySchema} from "./product-category";
 
+export const ProductLaunchesType = {
+  today: 'today',
+  yesterday: 'yesterday',
+  thedaybeforeyesterday: 'thedaybeforeyesterday',
+  last7days: 'last7days',
+  last30days: 'last30days',
+}
 
 export const ProductStatus = {
   pending: 'pending',
@@ -148,7 +155,7 @@ export type FindAllRequest = z.infer<typeof findAllRequestSchema>;
 export const findLaunchesRequestSchema = z.object({
   page: z.coerce.number().int().min(1).default(1).optional(),
   pageSize: z.coerce.number().int().min(1).max(100).default(10).optional(),
-  launchesType: z.enum(['today', 'week', 'month']).optional(),
+  launchesType: z.nativeEnum(ProductLaunchesType).default(ProductLaunchesType.today),
 });
 
 export type FindLaunchesRequest = z.infer<typeof findLaunchesRequestSchema>;

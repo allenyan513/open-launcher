@@ -27,6 +27,7 @@ import * as cheerio from 'cheerio';
 import {ProductCategoriesService} from "@src/modules/product-categories/product-categories.service";
 import {NotificationsService} from "@src/modules/notifications/notifications.service";
 import {Cron} from "@nestjs/schedule";
+import dayjs from "dayjs";
 
 @Injectable()
 export class ProductsService {
@@ -669,31 +670,49 @@ export class ProductsService {
 
   async findLaunches(uid: string, request: FindLaunchesRequest): Promise<PaginateResponse<ProductEntity>> {
     const {page, pageSize, launchesType} = request;
-    // launchesType can be 'today', 'week', or 'month'
-    const now = new Date();
-    const todayStart = new Date(now.setHours(0, 0, 0, 0)); // 今天 00:00:00
-    const endOfYesterday = new Date(todayStart.getTime() - 1); // 昨天 23:59:59.999
-    const startOf7DaysAgo = new Date(todayStart.getTime() - 7 * 24 * 60 * 60 * 1000); // 7 天前 00:00:00
-    const startOf30DaysAgo = new Date(todayStart.getTime() - 30 * 24 * 60 * 60 * 1000); // 30 天前 00:00:00
+    // launchesType can be 'today', 'yesterday', 'thedaybeforeyesterday', 'last7days', 'last30days'
+    const now = dayjs()
+    const todayStart = now.startOf('day');
+    const todayEnd = now.endOf('day');
+    const yesterdayStart = todayStart.subtract(1, 'day');
+    const yesterdayEnd = todayStart.subtract(1, 'day').endOf('day');
+    const thedaybeforeyesterdayStart = todayStart.subtract(2, 'day');
+    const thedaybeforeyesterdayEnd = todayStart.subtract(2, 'day').endOf('day');
+    const last7DaysStart = todayStart.subtract(6, 'day');
+    const last7DaysEnd = todayStart.endOf('day');
+    const last30DaysStart = todayStart.subtract(29, 'day');
+
 
     const whereCondition: any = {
       status: 'approved',
       ...(launchesType === 'today' && {
         launchDate: {
-          gte: todayStart,
-          lte: new Date(todayStart.getTime() + 24 * 60 * 60 * 1000 - 1), // 今天结束
+          gte: todayStart.toDate(),
+          lte: todayEnd.toDate(),
         },
       }),
-      ...(launchesType === 'week' && {
+      ...(launchesType === 'yesterday' && {
         launchDate: {
-          gte: startOf7DaysAgo,
-          lte: endOfYesterday,
+          gte: yesterdayStart.toDate(),
+          lte: yesterdayEnd.toDate(),
         },
       }),
-      ...(launchesType === 'month' && {
+      ...(launchesType === 'thedaybeforeyesterday' && {
         launchDate: {
-          gte: startOf30DaysAgo,
-          lte: endOfYesterday,
+          gte: thedaybeforeyesterdayStart.toDate(),
+          lte: thedaybeforeyesterdayEnd.toDate(),
+        },
+      }),
+      ...(launchesType === 'last7days' && {
+        launchDate: {
+          gte: last7DaysStart.toDate(),
+          lte: last7DaysEnd.toDate(),
+        },
+      }),
+      ...(launchesType === 'last30days' && {
+        launchDate: {
+          gte: last30DaysStart.toDate(),
+          lte: todayEnd.toDate(),
         },
       }),
     };

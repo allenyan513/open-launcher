@@ -124,12 +124,16 @@ export default async function ProductPage(props: {
         {/*header*/}
         <div className="flex flex-col lg:flex-row gap-2 items-start lg:items-center justify-between">
           <div className="flex flex-row items-center gap-4">
-            {product.icon && (
+            {product.icon ? (
               <img
-                className="w-18 h-18 rounded object-cover aspect-video "
+                className="w-12 h-12 rounded"
                 src={getStrapiMedia(product.icon)}
                 alt={product.name}
               />
+            ) : (
+              <div className="w-12 h-12 bg-black text-white rounded flex items-center justify-center">
+                {product?.name?.charAt(0).toUpperCase()}
+              </div>
             )}
             {/*Name Tagline Rating*/}
             <div className="flex flex-col">
@@ -165,7 +169,7 @@ export default async function ProductPage(props: {
             product.productCategories.map((item, index) => (
               <Link
                 key={index}
-                href={`/category/${item.slug}`}
+                href={`/${lang}/category/${item.slug}`}
                 className="rounded-md border border-gray-300 px-3 py-1 text-sm text-gray-700 hover:bg-gray-200 transition-colors duration-300"
               >
                 {item.name}
