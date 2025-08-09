@@ -1,33 +1,4 @@
-import {AuthFetchOptions} from "./index";
-
-export class UnauthorizedError extends Error {
-  constructor(message: string = 'Unauthorized') {
-    super(message);
-    this.name = 'UnauthorizedError';
-  }
-}
-
-export class BadRequestError extends Error {
-  constructor(message: string = 'Bad Request') {
-    super(message);
-    this.name = 'BadRequestError';
-  }
-}
-
-export class NotFoundError extends Error {
-  constructor(message: string = 'Not Found') {
-    super(message);
-    this.name = 'NotFoundError';
-  }
-}
-
-export class ServerError extends Error {
-  constructor(message: string = 'Server Error') {
-    super(message);
-    this.name = 'ServerError';
-  }
-}
-
+import {AuthFetchOptions, BadRequestError, NotFoundError, ServerError, UnauthorizedError} from "./index";
 // --- Fetch with Timeout ---
 function fetchWithTimeout(url: string, config: RequestInit, timeout = 10000): Promise<Response> {
   const controller = new AbortController();

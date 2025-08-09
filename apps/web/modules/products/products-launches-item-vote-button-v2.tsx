@@ -1,9 +1,10 @@
 'use client'
 import {BsCaretUp, BsCaretUpFill} from 'react-icons/bs';
 import {cn} from "@repo/ui/lib/utils";
-import {api} from '@repo/shared';
+import {api, UnauthorizedError} from '@repo/shared';
 import {useState} from 'react';
 import {IconCaretUp, IconCaretUpFilled} from '@tabler/icons-react';
+import {redirect} from "next/navigation";
 
 export function ProductVoteButtonV2(props: {
   productId: string;
@@ -26,6 +27,9 @@ export function ProductVoteButtonV2(props: {
           setIsVoted(false);
         })
         .catch((error) => {
+          if (error instanceof UnauthorizedError) {
+            redirect('/auth/signin')
+          }
           console.error('Error unvoting product:', error);
         });
     } else {
@@ -36,6 +40,9 @@ export function ProductVoteButtonV2(props: {
           setIsVoted(true);
         })
         .catch((error) => {
+          if (error instanceof UnauthorizedError) {
+            redirect('/auth/signin')
+          }
           console.error('Error voting product:', error);
         });
     }

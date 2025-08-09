@@ -3,6 +3,8 @@ import {BsCaretUp, BsCaretUpFill} from 'react-icons/bs';
 import {cn} from "@repo/ui/lib/utils";
 import {api} from '@repo/shared';
 import {useState} from 'react';
+import {UnauthorizedError} from "@repo/shared/api-client";
+import {redirect} from "next/navigation";
 
 export function ProductVoteButton(props: {
   productId: string;
@@ -23,7 +25,10 @@ export function ProductVoteButton(props: {
           setVoteCount(defaultIsVoted ? defaultVoteCount - 1 : defaultVoteCount);
           setIsVoted(false);
         })
-        .catch((error) => {
+        .catch((error: any) => {
+          if (error instanceof UnauthorizedError) {
+            redirect('/auth/signin')
+          }
           console.error('Error unvoting product:', error);
         });
     } else {
@@ -34,6 +39,9 @@ export function ProductVoteButton(props: {
           setIsVoted(true);
         })
         .catch((error) => {
+          if (error instanceof UnauthorizedError) {
+            redirect('/auth/signin')
+          }
           console.error('Error voting product:', error);
         });
     }
