@@ -116,6 +116,12 @@ export function Footer(props: {
               </Link>
             ))}
           </div>
+          <div>
+            <a href="https://ai.ff2050.com/products/ff2050ai" target="_blank">
+              <img src="https://ai.ff2050.com/api/products/ff2050ai/badge.svg?theme=light&text=FEATURED ON"
+                   style={{ width: '180px', height: '54px' }}/>
+            </a>
+          </div>
         </div>
 
         <div className="flex flex-col gap-4 md:grid md:grid-cols-3 md:col-span-8">
