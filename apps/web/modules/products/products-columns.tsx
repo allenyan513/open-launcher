@@ -1,7 +1,7 @@
 'use client';
 
 import {ColumnDef} from '@tanstack/react-table';
-import React from 'react';
+import React, {useState} from 'react';
 import {BsCameraVideo, BsImage, BsThreeDots, BsPin} from 'react-icons/bs';
 import {Button} from '@repo/ui/button';
 import {ArrowUpDown} from 'lucide-react';
@@ -23,9 +23,10 @@ import {
   DropdownMenuTrigger,
   DropdownMenuSeparator,
 } from '@repo/ui/dropdown-menu';
-import {getFormatData2, ProductEntity} from "@repo/shared";
+import {api, getFormatData2, ProductEntity} from "@repo/shared";
 import {getStrapiMedia} from "@/utils";
 import {useRouter} from "next/navigation";
+import toast from "react-hot-toast";
 
 export function columns(
   setData: any,
@@ -33,6 +34,14 @@ export function columns(
 ): ColumnDef<any>[] {
 
   const router = useRouter();
+
+  const deleteOne = async (id: string) => {
+    try {
+      await api.products.deleteOne(id);
+    } catch (error: any) {
+      toast.error(error.message);
+    }
+  }
 
   return [
     {
@@ -122,31 +131,17 @@ export function columns(
                 Edit
               </DropdownMenuItem>
               <DropdownMenuItem
+                onClick={() => {
+                  if (window.confirm('Are you sure you want to delete this product? This action cannot be undone.')) {
+                    deleteOne(product.id || '');
+                    setData((prev: any) => prev.filter((item: any) => item.id !== product.id));
+                    toast.success('Product deleted successfully');
+                  }
+                }}
                 className="cursor-pointer text-red-500">
                 Delete
               </DropdownMenuItem>
-              <AlertDialog>
-                <AlertDialogTrigger asChild></AlertDialogTrigger>
-                <AlertDialogContent>
-                  <AlertDialogHeader>
-                    <AlertDialogTitle>Are you sure?</AlertDialogTitle>
-                    <AlertDialogDescription>
-                      This action cannot be undone. This will permanently delete
-                      the review.
-                    </AlertDialogDescription>
-                  </AlertDialogHeader>
-                  <AlertDialogFooter>
-                    <AlertDialogCancel>Cancel</AlertDialogCancel>
-                    <AlertDialogAction
-                      onClick={() => {
-                        // deleteReview(review.id);
-                      }}
-                    >
-                      Continue
-                    </AlertDialogAction>
-                  </AlertDialogFooter>
-                </AlertDialogContent>
-              </AlertDialog>
+
             </DropdownMenuContent>
           </DropdownMenu>
         );

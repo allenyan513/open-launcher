@@ -18,6 +18,7 @@ import {useRouter} from 'next/navigation';
 import {useForm} from 'react-hook-form';
 import {Textarea} from "@repo/ui/textarea";
 import {SocialLinkInput} from "@/components/dashboard/sociallink-input";
+import {ProductsSubmitI18N} from "@/modules/products/products-submit-i18n";
 
 export function ProductsSubmitExtraInfo(props: {
   lang: string;
@@ -116,7 +117,9 @@ export function ProductsSubmitExtraInfo(props: {
           render={({field}) => (
             <div>
               <FormLabel className="mb-2 text-md justify-between items-center">
-                <p>What is your product about?</p>
+                <div className="flex  flex-row items-center gap-2">
+                   <span>What is your product about?</span> <ProductsSubmitI18N/>
+                </div>
                 <p className="text-sm text-gray-400">
                   {field.value ? field.value.length : 0}/500
                 </p>
@@ -134,7 +137,10 @@ export function ProductsSubmitExtraInfo(props: {
           render={({field}) => (
             <div>
               <FormLabel className="mb-2 text-md justify-between items-center">
-                <p>What are the key features of your product?</p>
+                <div className="flex  flex-row items-center gap-2">
+                  <span>What are the key features of your product?</span>
+                  <ProductsSubmitI18N/>
+                </div>
                 <p className="text-sm text-gray-400">
                   {field.value ? field.value.length : 0}/500
                 </p>
@@ -152,7 +158,10 @@ export function ProductsSubmitExtraInfo(props: {
           render={({field}) => (
             <div>
               <FormLabel className="mb-2 text-md justify-between items-center">
-                <p>What is the primary use case of your product?</p>
+                <div className="flex  flex-row items-center gap-2">
+                  <span>What is the primary use case of your product?</span>
+                  <ProductsSubmitI18N/>
+                </div>
                 <p className="text-sm text-gray-400">
                   {field.value ? field.value.length : 0}/500
                 </p>
@@ -170,7 +179,10 @@ export function ProductsSubmitExtraInfo(props: {
           render={({field}) => (
             <div>
               <FormLabel className="mb-2 text-md justify-between items-center">
-                <p>What are the steps to use your product?</p>
+                <div className="flex  flex-row items-center gap-2">
+                  <span>What are the steps to use your product?</span>
+                  <ProductsSubmitI18N/>
+                </div>
                 <p className="text-sm text-gray-400">
                   {field.value ? field.value.length : 0}/500
                 </p>
@@ -188,7 +200,10 @@ export function ProductsSubmitExtraInfo(props: {
           render={({field}) => (
             <div>
               <FormLabel className="mb-2 text-md justify-between items-center">
-                <p>Any frequently asked questions about your product?</p>
+                <div className="flex  flex-row items-center gap-2">
+                  <span>Any frequently asked questions about your product?</span>
+                  <ProductsSubmitI18N/>
+                </div>
                 <p className="text-sm text-gray-400">
                   {field.value ? field.value.length : 0}/500
                 </p>

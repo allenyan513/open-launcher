@@ -19,7 +19,7 @@ import {
   UpdateProductRequest,
   JwtPayload,
   SubmitProductRequest,
-  SimpleCreateProductRequest, findLaunchesRequestSchema
+  SimpleCreateProductRequest, findLaunchesRequestSchema, submitProductSchema
 } from '@repo/shared';
 import {Response} from 'express';
 
@@ -41,7 +41,8 @@ export class ProductsController {
   @UseGuards(JwtAuthGuard)
   @Post('submit')
   async submit(@Jwt() jwt: JwtPayload, @Body() request: SubmitProductRequest) {
-    return this.productsService.submit(jwt.userId, request);
+    const validatedRequest = submitProductSchema.parse(request);
+    return this.productsService.submit(jwt.userId, validatedRequest);
   }
 
   @UseGuards(JwtAuthGuard)

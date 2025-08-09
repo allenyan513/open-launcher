@@ -20,7 +20,7 @@ const pageItems = [
     icon: BsPatchExclamation,
   },
   {
-    title: 'Submit',
+    title: 'Launch',
     url: 'plan',
     icon: BsHeart,
   },

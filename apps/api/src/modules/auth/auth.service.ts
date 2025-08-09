@@ -1,12 +1,8 @@
-import { Injectable, Logger, UnauthorizedException } from '@nestjs/common';
-import { PrismaService } from '../prisma/prisma.service';
-import { JwtService } from '@nestjs/jwt';
-import { JwtPayload, CreateAccountDto } from '@repo/shared';
-import { EmailService } from '@src/modules/email/email.service';
-import { EMAIL_FROM } from '@src/modules/email/email.constants';
-import { render } from '@react-email/render';
-import * as React from 'react';
-import EmailSigninEmail from '@src/emails/email-signin-email';
+import {Injectable, Logger, UnauthorizedException} from '@nestjs/common';
+import {PrismaService} from '../prisma/prisma.service';
+import {JwtService} from '@nestjs/jwt';
+import {JwtPayload, CreateAccountDto} from '@repo/shared';
+import {NotificationsService} from "@src/modules/notifications/notifications.service";
 
 @Injectable()
 export class AuthService {
@@ -15,8 +11,9 @@ export class AuthService {
   constructor(
     private prismaService: PrismaService,
     private jwtService: JwtService,
-    private emailService: EmailService,
-  ) {}
+    private notificationService: NotificationsService,
+  ) {
+  }
 
   generateJwt(payload: JwtPayload): string {
     return this.jwtService.sign(payload);
@@ -25,7 +22,7 @@ export class AuthService {
   async sendMagicLink(email: string, redirect?: string) {
     this.logger.log(`Sending Magic Link: ${email}, Redirect: ${redirect}`);
     let user = await this.prismaService.user.findUnique({
-      where: { email },
+      where: {email},
     });
     let jwtPayload: JwtPayload;
     if (!user) {
@@ -68,17 +65,7 @@ export class AuthService {
     const token = this.generateJwt(jwtPayload);
     const encodedRedirect = encodeURIComponent(redirect);
     const magicLink = `${process.env.NEXT_PUBLIC_ENDPOINT_URL}/api/auth/magic-login?token=${token}&redirect=${encodedRedirect}`;
-    const html = await render(
-      React.createElement(EmailSigninEmail, {
-        url: magicLink,
-      }),
-    );
-    await this.emailService.send({
-      from: EMAIL_FROM,
-      to: [email],
-      subject: `Sign in to Reviewsup.io`,
-      html: html,
-    });
+    await this.notificationService.onSendMagicLink(email, user.name, magicLink);
     return {
       message: 'Magic link sent successfully',
     };
@@ -140,6 +127,7 @@ export class AuthService {
         updatedAt: new Date(),
       },
     });
+    await this.notificationService.onUserCreated(newUser.email, newUser.name);
     return newUser;
   }
 

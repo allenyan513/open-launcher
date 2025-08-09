@@ -97,9 +97,6 @@ export function Footer(props: {
             className=""
             isBeta={false}
           />
-          {/*<h3 className="text-lg font-bold sm:inline-block text-red-400">*/}
-          {/*  Reviewsup.io*/}
-          {/*</h3>*/}
           <h4 className='w-full md:max-w-50'>{props.websiteDescription}</h4>
           <div className="flex items-center">
             {(

@@ -2,10 +2,8 @@ import {authFetch} from './auth-fetch';
 import {
   FindAllRequest,
   ProductEntity,
-  UserEntity,
   PaginateResponse,
   CrawlProductResponse,
-  CreateProductRequest,
   UpdateProductRequest,
   RRResponse,
   CreateOneTimePaymentResponse,
@@ -26,7 +24,7 @@ export const products = {
     authFetch(`/api/products/findLaunches`, 'POST', request),
   findProducts: (): Promise<Record<string, ProductEntity[]>> =>
     authFetch(`/api/products/findProducts`, 'GET'),
-  create: (request: SimpleCreateProductRequest): Promise<ProductEntity> =>
+  create: (request: SimpleCreateProductRequest): Promise<RRResponse<ProductEntity>> =>
     authFetch(`/api/products`, 'POST', request),
   submit: (request: SubmitProductRequest,): Promise<RRResponse<ProductEntity | CreateOneTimePaymentResponse>> =>
     authFetch('/api/products/submit', 'POST', request),
@@ -35,7 +33,7 @@ export const products = {
     authFetch(`/api/products/crawl`, 'POST', {url}),
   updateOne: (id: string, request: UpdateProductRequest): Promise<ProductEntity> =>
     authFetch(`/api/products/${id}`, 'PATCH', request),
-  deleteOne: (id: string) =>
+  deleteOne: (id: string): Promise<ProductEntity> =>
     authFetch(`/api/products/${id}`, 'DELETE', {}),
 
   vote: (id: string): Promise<ProductEntity> =>

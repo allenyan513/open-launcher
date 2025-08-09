@@ -3,6 +3,8 @@ import {productCategorySchema} from "./product-category";
 
 
 export const ProductStatus = {
+  pending: 'pending',
+  scheduled: 'scheduled',
   reviewing: 'reviewing',
   rejected: 'rejected',
   approved: 'approved',
@@ -36,9 +38,6 @@ export const createProductSchema = z.object({
   icon: z.string().url('Invalid URL').min(1, 'Icon URL is required'),
   screenshots: z.array(z.string().url('Invalid URL')).optional(),
   productCategoryIds: z.array(z.string()).optional(),
-  submitOption: z
-    .enum(['free-submit', 'paid-submit', 'crawl-product-info', 'update'])
-    .optional(),
 });
 
 export type CreateProductRequest = z.infer<typeof createProductSchema>;
@@ -77,10 +76,11 @@ export type UpdateProductRequest = z.infer<typeof updateProductSchema>;
 
 export const submitProductSchema = z.object({
   id: z.string().min(1, 'Product ID is required'),
-  launchDate: z.date().optional(),
+  launchDate: z.coerce.date(),
   submitOption: z.enum([
-    'free-submit',
-    'paid-submit',
+    'standard-launch',
+    'verified-launch',
+    'premium-launch',
   ]),
 });
 
