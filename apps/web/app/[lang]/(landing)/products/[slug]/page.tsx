@@ -78,9 +78,9 @@ export default async function ProductPage(props: {
   if (!product) {
     notFound()
   }
-  // if (product.status !== 'approved') {
-  //   notFound()
-  // }
+  if (product.status !== 'approved') {
+    notFound()
+  }
   const name = product.name;
   const tagline = product?.productContents?.find((content) => content.language === lang)?.tagline || product.tagline || '';
   const description = product?.productContents?.find((content) => content.language === lang)?.description || product.description || '';
