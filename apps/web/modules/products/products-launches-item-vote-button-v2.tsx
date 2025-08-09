@@ -3,13 +3,15 @@ import {BsCaretUp, BsCaretUpFill} from 'react-icons/bs';
 import {cn} from "@repo/ui/lib/utils";
 import {api} from '@repo/shared';
 import {useState} from 'react';
+import {IconCaretUp, IconCaretUpFilled} from '@tabler/icons-react';
 
-export function ProductVoteButton(props: {
+export function ProductVoteButtonV2(props: {
   productId: string;
   voteCount: number;
   isVoted: boolean;
+  className?: string;
 }) {
-  const {productId, isVoted: defaultIsVoted, voteCount: defaultVoteCount} = props;
+  const {productId, isVoted: defaultIsVoted, voteCount: defaultVoteCount, className} = props;
   const [voteCount, setVoteCount] = useState<number>(defaultVoteCount);
   const [isVoted, setIsVoted] = useState<boolean>(defaultIsVoted);
 
@@ -42,14 +44,16 @@ export function ProductVoteButton(props: {
   return (
     <button
       id={'upvote-button'}
-      className={cn('flex flex-col rounded-md justify-center items-center border border-gray-200 text-gray-500 w-12 h-12 cursor-pointer hover:border-red-400 transition-colors')}
+      className={cn('flex flex-row rounded-full justify-center items-center border cursor-pointer transition-colors text-lg font-medium',
+        isVoted ? 'bg-white text-red-400 border-red-400 hover:bg-red-100' : 'bg-red-400 text-white hover:bg-red-500 border-red-400',
+        className,
+      )}
       onClick={onClickVote}
     >
-      {isVoted ?
-        <BsCaretUpFill className="text-red-400"/>
-        : <BsCaretUp className=""/>
-      }
-      {voteCount}
+      {isVoted ? <IconCaretUpFilled className="text-red-400"/> : <IconCaretUp className=""/>}
+      {isVoted ? 'Upvoted' : 'Upvote'}
+      {' • '}
+      {voteCount} votes
     </button>
   );
 }

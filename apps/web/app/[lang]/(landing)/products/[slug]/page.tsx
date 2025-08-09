@@ -10,7 +10,7 @@ import {notFound} from "next/navigation";
 import {Avatar, AvatarFallback, AvatarImage} from "@repo/ui/avatar";
 import {LinkDoFollow} from "@repo/ui/link-dofollow"
 import {websiteConfig} from "@repo/shared";
-import {ProductVoteButton} from "@/modules/products/products-launches-item-vote-button";
+import {ProductVoteButtonV2} from "@/modules/products/products-launches-item-vote-button-v2";
 import getSession from "@/actions/getSession";
 import Markdown from "react-markdown";
 import remarkGfm from "remark-gfm";
@@ -146,22 +146,15 @@ export default async function ProductPage(props: {
             </div>
           </div>
           {/*  Actions*/}
-          <div className="flex flex-row items-center gap-2 text-sm">
-            <ProductVoteButton
-              productId={product.id || ''}
-              voteCount={product.voteCount || 0}
-              isVoted={session?.productVotes?.some(vote => vote.productId === product.id) || false}
-            />
-            <LinkDoFollow
-              className="h-12 rounded-md bg-white text-black px-4 py-2 inline-flex items-center gap-2 border hover:bg-gray-100 transition-colors duration-300"
-              href={product.url || '#'}
-              isDoFollow={product.status === 'approved'}
-              isExternal={true}
-              refName={websiteConfig.websiteName}
-            >
-              <span>Visit Website</span>
-            </LinkDoFollow>
-          </div>
+          <LinkDoFollow
+            className="h-12 rounded-md text-center bg-white text-black px-4 py-2 inline-flex items-center  justify-center gap-2 border hover:bg-gray-100 transition-colors duration-300"
+            href={product.url || '#'}
+            isDoFollow={product.status === 'approved'}
+            isExternal={true}
+            refName={websiteConfig.websiteName}
+          >
+            Visit Website
+          </LinkDoFollow>
         </div>
         {/*Tags*/}
         <div className="flex flex-row flex-wrap gap-2">
@@ -246,7 +239,15 @@ export default async function ProductPage(props: {
         </div>
 
       </div>
-      <div className='md:col-span-3 flex flex-col gap-12'>
+      <div className='md:col-span-3 flex flex-col gap-8'>
+        <div className="md:static fixed bottom-0 left-0 w-full z-50 bg-white p-2 md:p-0 md:w-auto">
+          <ProductVoteButtonV2
+            productId={product.id || ''}
+            voteCount={product.voteCount || 0}
+            isVoted={session?.productVotes?.some(vote => vote.productId === product.id) || false}
+            className="w-full p-2 "
+          />
+        </div>
         <div className='text-sm text-gray-500 gap-4 flex flex-col'>
           <div className="flex flex-row gap-2 items-center ">
             <p>PUBLISHER</p>
