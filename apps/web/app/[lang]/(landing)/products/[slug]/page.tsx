@@ -1,5 +1,4 @@
 import Link from "next/link";
-import RichText from "@/components/products/RichText";
 import BreadCrumb, {BreadCrumbProps} from "@/components/products/BreadCrumb";
 import ProductListView from "@/components/products/ProductListView";
 import {Metadata} from "next";
@@ -10,9 +9,13 @@ import {api} from "@repo/shared";
 import {notFound} from "next/navigation";
 import {Avatar, AvatarFallback, AvatarImage} from "@repo/ui/avatar";
 import {LinkDoFollow} from "@repo/ui/link-dofollow"
-import {websiteConfig} from "@/config/website";
+import {websiteConfig} from "@repo/shared";
 import {ProductVoteButton} from "@/modules/products/products-launches-item-vote-button";
 import getSession from "@/actions/getSession";
+import Markdown from "react-markdown";
+import remarkGfm from "remark-gfm";
+import rehypeSanitize from 'rehype-sanitize';
+
 
 function ProductInformationItem(props: { title: string, content: string }) {
   const {title, content} = props
@@ -22,9 +25,13 @@ function ProductInformationItem(props: { title: string, content: string }) {
   return (
     <>
       <h2 className='font-semibold'>{title}</h2>
-      <RichText data={{
-        body: content,
-      }}/>
+      <div className='rich-text'>
+        <Markdown
+          children={content}
+          remarkPlugins={[remarkGfm]}
+          rehypePlugins={[rehypeSanitize]}
+        />
+      </div>
       <div className='border-t border-gray-300 my-2'></div>
     </>
   )
@@ -71,6 +78,9 @@ export default async function ProductPage(props: {
   if (!product) {
     notFound()
   }
+  // if (product.status !== 'approved') {
+  //   notFound()
+  // }
   const name = product.name;
   const tagline = product?.productContents?.find((content) => content.language === lang)?.tagline || product.tagline || '';
   const description = product?.productContents?.find((content) => content.language === lang)?.description || product.description || '';
@@ -107,9 +117,6 @@ export default async function ProductPage(props: {
     })
   }
 
-  if (!product) {
-    notFound()
-  }
   return (
     <div className='flex flex-col md:grid md:grid-cols-12 gap-8 pt-24 pb-12 px-4'>
       <div className='md:col-span-9 flex flex-col gap-4'>
@@ -200,8 +207,8 @@ export default async function ProductPage(props: {
         {/*Information*/}
         <div className='flex flex-col gap-2'>
           {!longDescription && !howToUse && !features && !useCase && !faq ? (
-            <p className='text-gray-500'>No additional information available for this product.</p>
-          ):
+              <p className='text-gray-500'>No additional information available for this product.</p>
+            ) :
             <p className='text-xl font-semibold mb-2'>{product.name} Product Information</p>
           }
           <ProductInformationItem

@@ -78,6 +78,7 @@ export class ProductCategoriesService {
     categories.forEach(category => {
       if (!groupMap[category.group]) {
         groupMap[category.group] = {
+          id : category.id,
           name: category.group,
           text: category.group.replace(/-/g, ' ').replace(/\b\w/g, char => char.toUpperCase()), // Convert slug to readable text
           children: [],
@@ -85,6 +86,7 @@ export class ProductCategoriesService {
       }
       groupMap[category.group].children = groupMap[category.group].children || [];
       groupMap[category.group].children!.push({
+        id: category.id,
         name: category.slug,
         text: category.name,
       });

@@ -2,7 +2,6 @@ import {BadRequestException, Injectable, Logger} from '@nestjs/common';
 import {PrismaService} from '../prisma/prisma.service';
 import {
   CrawlProductResponse,
-  CreateProductRequest,
   FindAllRequest,
   ProductEntity,
   SubmitProductRequest,
@@ -11,7 +10,7 @@ import {
   RRResponse,
   CreateOneTimePaymentResponse,
   hash,
-  SimpleCreateProductRequest, FindLaunchesRequest,
+  SimpleCreateProductRequest, FindLaunchesRequest, submitProductSchema,
 } from '@repo/shared';
 import slugify from 'slugify';
 import {$Enums} from '@repo/database/generated/client';
@@ -26,6 +25,8 @@ import {BadgeSvg} from './badge.svg';
 import * as React from 'react';
 import * as cheerio from 'cheerio';
 import {ProductCategoriesService} from "@src/modules/product-categories/product-categories.service";
+import {NotificationsService} from "@src/modules/notifications/notifications.service";
+import {Cron} from "@nestjs/schedule";
 
 @Injectable()
 export class ProductsService {
@@ -37,6 +38,7 @@ export class ProductsService {
     private browserlessService: BrowserlessService,
     private s3Service: S3Service,
     private productCategoriesService: ProductCategoriesService,
+    private notificationsService: NotificationsService,
   ) {
   }
 
@@ -44,33 +46,48 @@ export class ProductsService {
    * @param uid
    * @param dto
    */
-  async create(uid: string, dto: SimpleCreateProductRequest) {
-    const slug = slugify(dto.name, {
+  async create(uid: string, dto: SimpleCreateProductRequest): Promise<RRResponse<ProductEntity>> {
+    const {url, name} = dto;
+    const slug = slugify(name, {
       lower: true,
       strict: true,
     });
-    //check if the product with the same slug already exists
+    //check if the product with the same slug or url already exists
     const existingProduct = await this.prismaService.product.findFirst({
       where: {
-        slug: slug,
+        OR: [
+          {slug: slug},
+          {url: url},
+        ],
       },
+      select: {
+        id: true,
+        slug: true,
+        url: true,
+        name: true,
+        userId: true,
+      }
     });
     if (existingProduct) {
-      this.logger.error(
-        `Product with slug ${slug} already exists for user ${uid}`,
-      );
-      throw new BadRequestException(`Product with slug ${slug} already exists`);
+      return {
+        code: existingProduct.userId === uid ? 400 : 403,
+        message: `Product with slug ${slug} or URL ${url} already exists`,
+        data: existingProduct,
+      } as RRResponse<ProductEntity>;
     }
-    const crawlProductResponse = await this.crawlProductInfo(dto.url);
+    const crawlProductResponse = await this.crawlProductInfo(url);
     if (!crawlProductResponse) {
-      this.logger.error(`Failed to crawl product info for URL: ${dto.url}`);
-      throw new BadRequestException(`Failed to crawl product info for URL: ${dto.url}`);
+      return {
+        code: 400,
+        message: 'Failed to crawl product info',
+        data: null,
+      } as RRResponse<ProductEntity>;
     }
-    return this.prismaService.product.create({
+    const newProduct = await this.prismaService.product.create({
       data: {
         userId: uid,
-        url: dto.url,
-        name: dto.name,
+        url: url,
+        name: name,
         slug: slug,
         tagline: crawlProductResponse.title || '',
         description: crawlProductResponse.description || '',
@@ -81,6 +98,11 @@ export class ProductsService {
         updatedAt: new Date(),
       },
     });
+    return {
+      code: 200,
+      message: 'Product created successfully',
+      data: newProduct as ProductEntity,
+    } as RRResponse<ProductEntity>
   }
 
   async crawlProductInfo(url: string) {
@@ -140,10 +162,13 @@ export class ProductsService {
     uid: string,
     dto: SubmitProductRequest,
   ): Promise<RRResponse<ProductEntity | CreateOneTimePaymentResponse>> {
-    if (dto.submitOption === 'paid-submit') {
-      return this.createPaidSubmit(uid, dto);
-    } else if (dto.submitOption === 'free-submit') {
-      return this.createFreeSubmit(uid, dto);
+    this.logger.debug(`User ${uid} is submitting a product with data:`, dto);
+    if (dto.submitOption === 'standard-launch') {
+      return this.createStandardLaunch(uid, dto);
+    } else if (dto.submitOption === 'verified-launch') {
+      return this.createVerifiedLaunch(uid, dto);
+    } else if (dto.submitOption === 'premium-launch') {
+      return this.createPremiumLaunch(uid, dto);
     } else {
       this.logger.error(`Unknown submit option: ${dto.submitOption}`);
       return {
@@ -159,7 +184,7 @@ export class ProductsService {
    * @param uid
    * @param dto
    */
-  async createPaidSubmit(
+  async createPremiumLaunch(
     uid: string,
     dto: SubmitProductRequest,
   ): Promise<RRResponse<ProductEntity | CreateOneTimePaymentResponse>> {
@@ -208,6 +233,7 @@ export class ProductsService {
           updatedAt: new Date(),
         },
       });
+      await this.notificationsService.onProductStatusChanged(product.id)
       return {
         code: 200,
         message: 'Product created successfully',
@@ -217,11 +243,11 @@ export class ProductsService {
   }
 
   /**
-   * 创建一个免费提交的产品
+   * 创建一个标准提交的产品
    * @param uid
    * @param dto
    */
-  async createFreeSubmit(
+  async createStandardLaunch(
     uid: string,
     dto: SubmitProductRequest,
   ): Promise<RRResponse<ProductEntity>> {
@@ -238,6 +264,67 @@ export class ProductsService {
         data: null,
       };
     }
+    //检查launchDate是否在未来，且大于7天以上
+    const now = new Date();
+    const minAllowedDate = new Date(now.getTime() + 7 * 24 * 60 * 60 * 1000); // 当前时间 + 7 天
+    if (dto.launchDate < minAllowedDate) {
+      this.logger.error(
+        `Launch date ${dto.launchDate} must be at least 7 days in the future for user ${uid}`,
+      );
+      return {
+        code: 400,
+        message: 'Launch date must be at least 7 days in the future',
+        data: null,
+      };
+    }
+    const product = await this.prismaService.product.update({
+      where: {
+        id: dto.id,
+      },
+      data: {
+        status: 'scheduled',
+        launchDate: dto.launchDate || new Date(),
+        updatedAt: new Date(),
+      },
+    });
+    await this.notificationsService.onProductStatusChanged(product.id)
+    return {
+      code: 200,
+      message: 'Product created successfully',
+      data: product,
+    };
+  }
+
+  async createVerifiedLaunch(
+    uid: string,
+    dto: SubmitProductRequest,
+  ): Promise<RRResponse<ProductEntity>> {
+    const existingProduct = await this.prismaService.product.findUnique({
+      where: {
+        id: dto.id,
+      },
+    });
+    if (!existingProduct) {
+      this.logger.error(`Product with ID ${dto.id} not found for user ${uid}`);
+      return {
+        code: 404,
+        message: `Product with ID ${dto.id} not found`,
+        data: null,
+      };
+    }
+    //检查launchDate是否在未来
+    const now = new Date();
+    if (dto.launchDate < now) {
+      this.logger.error(
+        `Launch date ${dto.launchDate} must be in the future for user ${uid}`,
+      );
+      return {
+        code: 400,
+        message: 'Launch date must be in the future',
+        data: null,
+      };
+    }
+
     const targets = [process.env.NEXT_PUBLIC_APP_URL];
     const verifyResult = await this.verifyEmbedCode(
       targets,
@@ -263,6 +350,7 @@ export class ProductsService {
         updatedAt: new Date(),
       },
     });
+    await this.notificationsService.onProductStatusChanged(product.id)
     return {
       code: 200,
       message: 'Product created successfully',
@@ -449,6 +537,7 @@ export class ProductsService {
     return this.prismaService.product.delete({
       where: {
         id: id,
+        userId: uid,
       },
     });
   }
@@ -695,5 +784,43 @@ export class ProductsService {
       results[category.name] = products;
     }
     return results;
+  }
+
+
+  /**
+   * 定时任务：
+   * 1. 每天9:00AM执行
+   * 2. 查询所有scheduled产品, 如果launchDate小于等于今天的日期，则将状态改为approved
+   */
+  @Cron('0 9 * * *') // 每天9:00AM执行
+  async scheduleProductLaunches(): Promise<void> {
+    this.logger.debug('Scheduling product launches');
+    const now = new Date();
+    const todayStart = new Date(now.setHours(9, 0, 0, 0)); // 今天 9:00:00
+    const productsToLaunch = await this.prismaService.product.findMany({
+      where: {
+        status: 'scheduled',
+        launchDate: {
+          lte: todayStart,
+        },
+      },
+    });
+    if (productsToLaunch.length === 0) {
+      this.logger.debug('No products to launch today');
+      return;
+    }
+    for (const product of productsToLaunch) {
+      await this.prismaService.product.update({
+        where: {
+          id: product.id,
+        },
+        data: {
+          status: 'approved',
+          updatedAt: new Date(),
+        },
+      });
+      await this.notificationsService.onProductStatusChanged(product.id);
+    }
+    this.logger.debug(`Launched ${productsToLaunch.length} products successfully`);
   }
 }

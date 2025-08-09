@@ -4,12 +4,16 @@ import {columns} from "@/modules/products/products-columns";
 import {api} from "@repo/shared/api-client";
 import {DataTable} from "@repo/ui/data-table";
 import {ColumnFiltersState, SortingState} from "@tanstack/react-table";
-import {ProductSubmitDialog} from "@/modules/products/products-submit-dialog";
+import {Button} from "@repo/ui/button";
+import {BsPlusCircle} from "react-icons/bs";
+import React from "react";
+import {useRouter} from "next/navigation";
 
 export function ProductsPage(props: {
   lang: string;
 }) {
   const {lang} = props;
+  const router = useRouter();
   const fetchReviews = async (
     pageIndex: number,
     pageSize: number,
@@ -37,7 +41,16 @@ export function ProductsPage(props: {
         subtitle={'Manage your products here.'}
         buttons={
           <>
-            <ProductSubmitDialog/>
+            <Button
+              size={'lg'}
+              variant={'outline'}
+              onClick={() => {
+                router.push(`/${lang}/dashboard/submit`);
+              }}
+            >
+              <BsPlusCircle className="text-2xl"/>
+              Submit Product
+            </Button>
           </>
         }
       />

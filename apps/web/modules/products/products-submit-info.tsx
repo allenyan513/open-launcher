@@ -20,6 +20,9 @@ import {useRouter} from 'next/navigation';
 import {TagSelectorFormField} from '@/modules/products/products-tag-selector-form-field';
 import {useForm} from 'react-hook-form';
 import slugify from 'slugify';
+import {Required} from "@repo/ui/required";
+import Link from "next/link";
+import {ProductsSubmitI18N} from "@/modules/products/products-submit-i18n";
 
 export function ProductsSubmitInfo(props: {
   lang: string;
@@ -102,7 +105,7 @@ export function ProductsSubmitInfo(props: {
           render={({field}) => (
             <div>
               <FormLabel className="mb-2 text-md">
-                Link to the Product
+                Link to the Product <Required/>
               </FormLabel>
               <FormControl>
                 <Input
@@ -121,7 +124,7 @@ export function ProductsSubmitInfo(props: {
           render={({field}) => (
             <div>
               <FormLabel className="mb-2 text-md justify-between items-center">
-                <p>Name of the Product</p>
+                <p>Name of the Product <Required/></p>
                 <p className="text-sm text-gray-400">
                   {field.value ? field.value.length : 0}/32
                 </p>
@@ -135,11 +138,21 @@ export function ProductsSubmitInfo(props: {
               </FormControl>
               <FormMessage/>
               <p className="text-sm text-gray-500 mt-2 mx-2">
-                {process.env.NEXT_PUBLIC_APP_URL}/products/
-                {slugify(form.watch('name') || '', {
-                  lower: true,
-                  strict: true,
-                })}
+                Launch URL: {' '}
+                <Link
+                  href={`${process.env.NEXT_PUBLIC_ENDPOINT_URL}/products/${slugify(field.value || '', {
+                    lower: true,
+                    strict: true,
+                  })}`}
+                  target="_blank"
+                  className="text-blue-500 hover:underline"
+                >
+                  {`${process.env.NEXT_PUBLIC_ENDPOINT_URL}/products/${slugify(field.value || '', {
+                    lower: true,
+                    strict: true,
+                  })}`}
+                </Link>
+
               </p>
             </div>
           )}
@@ -149,10 +162,19 @@ export function ProductsSubmitInfo(props: {
           name="tagline"
           render={({field}) => (
             <div>
-              <FormLabel className="mb-2 text-md justify-between items-center">
-                <p>Tagline</p>
-                <p className="text-sm text-gray-400">
-                  {field.value ? field.value.length : 0}/64
+              <FormLabel className="mb-2 text-md  flex flex-col w-full">
+                <div className='flex flex-row justify-between items-center w-full'>
+                  <div className="flex flex-row items-center gap-2">
+                    <span>Tagline</span>
+                    <ProductsSubmitI18N/>
+                    <Required/>
+                  </div>
+                  <p className="text-sm text-gray-400">
+                    {field.value ? field.value.length : 0}/64
+                  </p>
+                </div>
+                <p className='text-sm text-gray-500 text-start w-full'>
+                  A short description of your product, displayed in search results and social media previews.
                 </p>
               </FormLabel>
               <FormControl>
@@ -171,7 +193,11 @@ export function ProductsSubmitInfo(props: {
           render={({field}) => (
             <div>
               <FormLabel className="mb-2 text-md flex flex-row justify-between items-center">
-                <p>Description of the Product</p>
+                <div className="flex flex-row items-center gap-2">
+                  <span>Description of the Product</span>
+                  <ProductsSubmitI18N/>
+                  <Required/>
+                </div>
                 <p className="text-sm text-gray-400">
                   {field.value ? field.value.length : 0}/260
                 </p>
@@ -194,7 +220,7 @@ export function ProductsSubmitInfo(props: {
           name="icon"
           render={({field}) => (
             <div>
-              <FormLabel className="mb-2 text-md">Icon</FormLabel>
+              <FormLabel className="mb-2 text-md">Icon <Required/></FormLabel>
               <FormControl>
                 {/*<Input placeholder="https://icon.url" {...field} />*/}
                 <div className="flex flex-row items-center gap-2">
@@ -227,7 +253,7 @@ export function ProductsSubmitInfo(props: {
           render={({field}) => (
             <div>
               <FormLabel className="mb-2 text-md flex flex-col items-start">
-                <p>Gallery</p>
+                <p>Gallery <Required/></p>
                 <p className="text-sm text-gray-500">
                   The first image will be used as the social preview when
                   your link is shared online. We recommend at least 3 or
@@ -290,9 +316,6 @@ export function ProductsSubmitInfo(props: {
           size="lg"
           type="submit"
           className='max-w-sm'
-          onClick={() => {
-            form.setValue('submitOption', 'update');
-          }}
         >
           Next
         </Button>

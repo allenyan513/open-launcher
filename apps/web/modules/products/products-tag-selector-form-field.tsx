@@ -1,30 +1,38 @@
 import {Popover, PopoverTrigger, PopoverContent} from '@repo/ui/popover';
 import {Button} from '@repo/ui/button';
-import {Command, CommandItem} from '@repo/ui/command';
+import {
+  Command,
+  CommandEmpty,
+  CommandGroup,
+  CommandInput,
+  CommandItem,
+  CommandList,
+  CommandSeparator
+} from '@repo/ui/command';
 import {X} from 'lucide-react';
-import {useEffect, useRef, useState} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import {
   FormField,
   FormControl,
   FormLabel,
   FormMessage,
 } from '@repo/ui/form';
-import {ProductCategoryEntity} from '@repo/shared/types';
+import {ProductCategoryTree} from '@repo/shared/types';
 import {api} from "@repo/shared";
+import {Required} from "@repo/ui/required";
 
 export function TagSelectorFormField({form}: { form: any }) {
   const [open, setOpen] = useState(false);
   const buttonRef = useRef<HTMLButtonElement>(null);
-  const [productCategories, setProductCategories] = useState<ProductCategoryEntity[]>([]);
+  const [tree, setTree] = useState<ProductCategoryTree[] | undefined>(undefined);
 
   useEffect(() => {
-    api.productCategories
-      .findAll()
-      .then((categories) => {
-        setProductCategories(categories);
+    api.productCategories.findTree()
+      .then((tree) => {
+        setTree(tree);
       })
       .catch((error) => {
-        console.error('Error fetching product categories:', error);
+        console.error('Error fetching product categories tree:', error);
       });
   }, []);
 
@@ -48,7 +56,7 @@ export function TagSelectorFormField({form}: { form: any }) {
 
         return (
           <div>
-            <FormLabel className="mb-2 text-md">Product Categories</FormLabel>
+            <FormLabel className="mb-2 text-md">Product Categories <Required/></FormLabel>
             <FormControl>
               <div>
                 <Popover open={open} onOpenChange={setOpen}>
@@ -68,19 +76,52 @@ export function TagSelectorFormField({form}: { form: any }) {
                     className="p-0 max-h-[300px] overflow-y-auto"
                   >
                     <Command>
-                      {productCategories.map((item, index) => (
-                        <CommandItem
-                          className='text-md'
-                          key={item.id}
-                          value={item.id}
-                          onSelect={() => {
-                            handleSelect(item.id || '');
-                          }}
-                          disabled={selected.includes(item.id)}
-                        >
-                          {item.name}
-                        </CommandItem>
-                      ))}
+                      <CommandInput placeholder={'Type a product category...'}/>
+                      <CommandList>
+                        <CommandEmpty>
+                          No categories found.
+                        </CommandEmpty>
+                        {tree?.map((item) => (
+                          <>
+                            <CommandGroup
+                              key={item.id}
+                              heading={
+                                <span className='text-sm font-medium text-gray-500'>
+                                {item.text}
+                              </span>
+                              }
+                              className='text-sm'
+                            >
+                              {item?.children?.map((child) => (
+                                <CommandItem
+                                  key={child.id}
+                                  className='text-sm ml-2'
+                                  onSelect={() => {
+                                    handleSelect(child.id || '');
+                                  }}
+                                  disabled={selected.includes(child.id || '')}
+                                >
+                                  {child.text}
+                                </CommandItem>
+                              ))}
+                            </CommandGroup>
+                            <CommandSeparator/>
+                          </>
+                        ))}
+                      </CommandList>
+                      {/*{productCategories.map((item, index) => (*/}
+                      {/*  <CommandItem*/}
+                      {/*    className='text-md'*/}
+                      {/*    key={item.id}*/}
+                      {/*    value={item.id}*/}
+                      {/*    onSelect={() => {*/}
+                      {/*      handleSelect(item.id || '');*/}
+                      {/*    }}*/}
+                      {/*    disabled={selected.includes(item.id)}*/}
+                      {/*  >*/}
+                      {/*    {item.name}*/}
+                      {/*  </CommandItem>*/}
+                      {/*))}*/}
                     </Command>
                   </PopoverContent>
                 </Popover>
@@ -90,7 +131,10 @@ export function TagSelectorFormField({form}: { form: any }) {
                       key={tagKey}
                       className="flex items-center gap-1 bg-muted px-2 py-1 rounded-md text-sm"
                     >
-                      <span>{productCategories.find((item) => item.id === tagKey)?.name || tagKey}</span>
+                      <span>
+                        {/*{productCategories.find((item) => item.id === tagKey)?.name || tagKey}*/}
+                        {tree?.flatMap(item => [item, ...(item.children || [])]).find(i => i.id === tagKey)?.text || tagKey}
+                      </span>
                       <button
                         type="button"
                         onClick={() => handleRemove(tagKey)}

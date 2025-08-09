@@ -14,6 +14,7 @@ import {OrdersModule} from './modules/orders/orders.module';
 import {BrowserlessModule} from '@src/modules/browserless/browserless.module';
 import {ProductsModule} from "@src/modules/products/products.module";
 import {ProductCategoriesModule} from "@src/modules/product-categories/product-categories.module";
+import {NotificationsModule} from "@src/modules/notifications/notifications.module";
 
 @Module({
   imports: [
@@ -39,6 +40,7 @@ import {ProductCategoriesModule} from "@src/modules/product-categories/product-c
     BrowserlessModule,
     ProductsModule,
     ProductCategoriesModule,
+    NotificationsModule,
   ],
   controllers: [AppController],
   providers: [AppService],

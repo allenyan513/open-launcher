@@ -1,6 +1,6 @@
 'use client';
 
-import { websiteConfig } from '@/config/website';
+import { websiteConfig } from '@repo/shared';
 import Link from 'next/link';
 
 export default function CheckoutCancelPage() {

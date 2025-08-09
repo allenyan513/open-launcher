@@ -1,4 +1,4 @@
-import { z } from 'zod';
+import {z} from 'zod';
 
 export const PRODUCT_CATEGORY_GROUP = [
   {
@@ -64,9 +64,11 @@ export const PRODUCT_CATEGORY_GROUP = [
 ]
 
 export const productCategoryTree = z.object({
+  id: z.string(),
   name: z.string(),
   text: z.string(),
   children: z.array(z.object({
+    id: z.string(),
     name: z.string(),
     text: z.string(),
   })).optional(),

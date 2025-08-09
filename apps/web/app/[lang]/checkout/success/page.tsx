@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import {websiteConfig} from "@/config/website";
+import {websiteConfig} from "@repo/shared";
 
 export default function CheckoutSuccessPage() {
   return (
