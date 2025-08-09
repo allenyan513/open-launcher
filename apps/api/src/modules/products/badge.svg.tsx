@@ -1,10 +1,11 @@
 import React from 'react';
 
 export function BadgeSvg(props: {
+  text: string;
   voteCount: number;
   theme: 'light' | 'dark';
 }) {
-  const { voteCount, theme } = props;
+  const { text, voteCount, theme } = props;
   const bgColor = theme === 'dark' ? '#1f2937' : '#ffffff';
   const textColor = theme === 'dark' ? '#f9fafb' : '#111827';
   const textColorSecondary = theme === 'dark' ? '#9ca3af' : '#6b7280';
@@ -34,7 +35,7 @@ export function BadgeSvg(props: {
         fontSize="10"
         fill={textColorSecondary}
       >
-        FEATURED ON
+        {text}
       </text>
       <text
         x="48"

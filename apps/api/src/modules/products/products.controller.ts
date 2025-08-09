@@ -64,7 +64,7 @@ export class ProductsController {
   }
 
   @Get('findProducts')
-  async findProducts(){
+  async findProducts() {
     return this.productsService.findProducts();
   }
 
@@ -81,11 +81,13 @@ export class ProductsController {
   @Get(':id/badge.svg')
   async getBadgeSvgById(
     @Param('id') id: string,
+    @Query('text') text: 'FEATURED ON' | 'LAUNCHED ON' = 'FEATURED ON',
     @Query('theme') theme: 'light' | 'dark' = 'light',
     @Res() res: Response,
   ) {
     const svgContent = await this.productsService.generateProductBadgeSvg(
       id,
+      text,
       theme,
     );
     res.setHeader('Content-Type', 'image/svg+xml');

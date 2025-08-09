@@ -30,28 +30,8 @@ import {BsAward, BsBarChart, BsClock, BsHouseDoor} from "react-icons/bs";
 import {IconHome, IconAward, IconClock, IconChartBarPopular, IconRocket, IconCheck} from "@tabler/icons-react";
 import {cn} from "@repo/ui/lib/utils";
 import {LoadingText} from "@repo/ui/loading-text";
+import {ProductsSubmitLaunchBadge} from "@/modules/products/products-submit-launch-badge";
 
-const badgeEmbedCode = `
-<a href="{{endpointUrl}}/products/{{productIdOrSlug}}" target="_blank">
-<img src="{{endpointUrl}}/api/products/{{productIdOrSlug}}/badge.svg?theme={{theme}}"
-  style="width: 180px; height: 54px;"
-  width="180"
-  height="54" />
-</a>
-`;
-
-function getBadgeEmbedCode(
-  productIdOrSlug: string,
-  theme: 'light' | 'dark' = 'light',
-  endpointUrl?: string,
-): string {
-  const defaultEndpointUrl = endpointUrl || 'http://localhost';
-  return badgeEmbedCode
-    .replace(/{{productIdOrSlug}}/g, productIdOrSlug)
-    .replace(/{{endpointUrl}}/g, defaultEndpointUrl)
-    .replace(/{{theme}}/g, theme)
-    .trim();
-}
 
 function LaunchPlan(props: {
   title: string;
@@ -106,7 +86,6 @@ export function ProductsSubmitPlan(props: {
     resolver: zodResolver(submitProductSchema),
     defaultValues: {
       id: productId,
-      //默认的launchDate是当前时间+7天
       launchDate: new Date(new Date().getTime() + 8 * 24 * 60 * 60 * 1000),
       submitOption: 'standard-launch'
     },
@@ -117,17 +96,7 @@ export function ProductsSubmitPlan(props: {
   const [loading, setLoading] = useState<boolean>(false);
   const [isCheckDialogOpen, setIsCheckDialogOpen] = useState(false);
   const [launchPlan, setLaunchPlan] = useState<'standard-launch' | 'verified-launch' | 'premium-launch'>('standard-launch');
-
-  const badgeEmbedCodeLight = getBadgeEmbedCode(
-    productId,
-    'light',
-    process.env.NEXT_PUBLIC_ENDPOINT_URL as string,
-  );
-  const badgeEmbedCodeDark = getBadgeEmbedCode(
-    productId,
-    'dark',
-    process.env.NEXT_PUBLIC_ENDPOINT_URL as string,
-  );
+  const [productSlug, setProductSlug] = useState('');
 
   const onSubmit = async () => {
     try {
@@ -176,6 +145,7 @@ export function ProductsSubmitPlan(props: {
             launchDate: new Date(new Date().getTime() + 8 * 24 * 60 * 60 * 1000),
             submitOption: 'standard-launch'
           });
+          setProductSlug(product.slug || '');
         }
       })
       .catch((error) => {
@@ -303,53 +273,12 @@ export function ProductsSubmitPlan(props: {
           </div>
         </div>
 
+        {launchPlan === 'verified-launch' && (
+          <ProductsSubmitLaunchBadge
+            productSlug={productSlug}
+          />
+        )}
 
-        <div
-          className={cn("flex flex-col  justify-center items-center gap-1 text-start my-4 w-full border border-gray-300 p-4 rounded-md",
-            launchPlan === 'verified-launch' ? '' : 'hidden'
-          )}>
-          <p>Embed the badge on your website:</p>
-          <div className="flex flex-col gap-2 my-4">
-            <div dangerouslySetInnerHTML={{__html: badgeEmbedCodeLight}}/>
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={(e) => {
-                e.preventDefault();
-                navigator.clipboard.writeText(badgeEmbedCodeLight);
-                toast.success('Embed code copied to clipboard!');
-              }}
-            >
-              Copy embed code
-            </Button>
-          </div>
-
-          <div>
-            <div className="flex flex-col gap-1">
-              <div dangerouslySetInnerHTML={{__html: badgeEmbedCodeDark}}/>
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={(e) => {
-                  e.preventDefault();
-                  navigator.clipboard.writeText(badgeEmbedCodeDark);
-                  toast.success('Embed code copied to clipboard!');
-                }}
-              >
-                Copy embed code
-              </Button>
-            </div>
-          </div>
-
-          <div className="flex flex-col gap-1 text-start my-4">
-            <p>Rules:</p>
-            <ul className="text-start list-disc pl-4 text-sm text-gray-500">
-              <li>Make sure your website's Domain Rating (DR) is greater than 0</li>
-              <li>Embed the badge on your website to verify your product</li>
-              <li>Maintain the badge and ensure it is visible, we will check it periodically</li>
-            </ul>
-          </div>
-        </div>
 
         <FormField
           control={form.control}
