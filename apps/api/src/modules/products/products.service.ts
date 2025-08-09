@@ -542,12 +542,13 @@ export class ProductsService {
     });
   }
 
-  async generateProductBadgeSvg(id: string, theme: 'light' | 'dark') {
+  async generateProductBadgeSvg(id: string, text: string, theme: 'light' | 'dark') {
     const product = await this.findOne(id);
     if (!product) {
       throw new Error('Product not found');
     }
     const el = React.createElement(BadgeSvg, {
+      text: text,
       voteCount: product.voteCount || 0,
       theme: theme,
     });

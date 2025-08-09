@@ -1,8 +1,8 @@
 'use client';
-import { buttonVariants } from '@repo/ui/button';
+import {buttonVariants} from '@repo/ui/button';
 import Link from 'next/link';
-import { BsGithub, BsLinkedin, BsTwitterX, BsEnvelope } from 'react-icons/bs';
-import { I18nEntries } from '@/components/i18n-entries';
+import {BsGithub, BsLinkedin, BsTwitterX, BsEnvelope} from 'react-icons/bs';
+import {I18nEntries} from '@/components/i18n-entries';
 import {Logo} from "@/components/landing/logo";
 import * as React from "react";
 
@@ -67,7 +67,7 @@ function FooterLinks(props: {
           href={link.url}
           className="text-gray-500 hover:text-gray-600"
           target={link.external ? '_blank' : '_self'}
-          {...(link.external ? { rel: 'noopener noreferrer' } : {})}
+          {...(link.external ? {rel: 'noopener noreferrer'} : {})}
         >
           {link.title}
         </Link>
@@ -101,16 +101,16 @@ export function Footer(props: {
           <div className="flex items-center">
             {(
               [
-                { href: props.twitterLink, icon: <BsTwitterX /> },
-                { href: props.linkedinLink, icon: <BsLinkedin /> },
-                { href: props.githubLink, icon: <BsGithub /> },
-                { href: props.email, icon: <BsEnvelope /> },
+                {href: props.twitterLink, icon: <BsTwitterX/>},
+                {href: props.linkedinLink, icon: <BsLinkedin/>},
+                {href: props.githubLink, icon: <BsGithub/>},
+                {href: props.email, icon: <BsEnvelope/>},
               ] as const
             ).map((link, index) => (
               <Link
                 key={index}
                 href={link.href}
-                className={buttonVariants({ variant: 'ghost', size: 'icon' })}
+                className={buttonVariants({variant: 'ghost', size: 'icon'})}
               >
                 {link.icon}
               </Link>
@@ -120,15 +120,15 @@ export function Footer(props: {
 
         <div className="flex flex-col gap-4 md:grid md:grid-cols-3 md:col-span-8">
           <div className="flex flex-col gap-4">
-            <I18nEntries />
+            <I18nEntries/>
           </div>
           <div className="flex flex-col gap-4">
-            <FooterLinks title="Products" links={sources} />
+            <FooterLinks title="Products" links={sources}/>
             {/*<FooterLinks title="Compares" links={compares} />*/}
             {/*<FooterLinks title="Blogs" links={howTo} />*/}
           </div>
           <div className="flex flex-col gap-4">
-            <FooterLinks title="Resources" links={resources} />
+            <FooterLinks title="Resources" links={resources}/>
           </div>
         </div>
       </div>
