@@ -2,9 +2,6 @@ import {ProductLaunchesPage} from "@/modules/products/products-launches-page";
 import type {Metadata} from "next";
 import {i18n} from "@/config/i18n-config";
 
-//每小时更新一次
-export const revalidate = 3600; // 1 hour
-
 export const metadata: Metadata = {
   title: 'FF2050.AI - Find your next AI tool',
   description:
