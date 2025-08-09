@@ -325,7 +325,7 @@ export class ProductsService {
       };
     }
 
-    const targets = [process.env.NEXT_PUBLIC_APP_URL];
+    const targets = [process.env.NEXT_PUBLIC_ENDPOINT_URL as string];
     const verifyResult = await this.verifyEmbedCode(
       targets,
       existingProduct.url,
@@ -589,8 +589,8 @@ export class ProductsService {
     return {
       code: linkExists ? 200 : 400,
       message: linkExists
-        ? 'Widget embedding verified successfully!'
-        : 'Widget embedding verification failed',
+        ? 'Verified successfully!'
+        : 'Verification failed',
       data: linkExists,
     } as RRResponse<boolean>;
   }

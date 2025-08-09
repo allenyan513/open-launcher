@@ -97,7 +97,7 @@ export class ProductsController {
   @UseGuards(JwtAuthGuard)
   @Post('verify')
   async verify(@Body('url') url: string) {
-    const targets = [process.env.NEXT_PUBLIC_APP_URL];
+    const targets = [process.env.NEXT_PUBLIC_ENDPOINT_URL as string];
     return this.productsService.verifyEmbedCode(targets, url);
   }
 
